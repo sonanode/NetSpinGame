@@ -2,6 +2,14 @@
 /** Local assets for GitHub Pages / standalone deploy */
 export const ASSET_BASE = 'assets/symbols';
 
+/** Root path for this site (e.g. /NetSpinGame/ on GitHub Pages) */
+export function getSiteRoot() {
+  if (typeof window === 'undefined') return '/';
+  const path = window.location.pathname || '/';
+  const slash = path.lastIndexOf('/');
+  return slash >= 0 ? path.slice(0, slash + 1) : '/';
+}
+
 export const SYMBOLS = [
   { id: 0, name: 'A', file: 'A.png', wildSub: true },
   { id: 1, name: '10', file: '10.png', wildSub: true },
@@ -141,5 +149,6 @@ export const SPIN_TIMING = {
 };
 
 export function symbolImgUrl(sym) {
-  return `${ASSET_BASE}/${encodeURIComponent(sym.file)}`;
+  const root = getSiteRoot();
+  return `${root}${ASSET_BASE}/${encodeURIComponent(sym.file)}`;
 }

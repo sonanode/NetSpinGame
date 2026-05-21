@@ -177,6 +177,8 @@ html, body {
   border-radius: 12px;
   padding: 8px 5px;
   min-height: 280px;
+  position: relative;
+  z-index: 1;
 }
 
 .reel-col {
@@ -216,8 +218,12 @@ html, body {
 }
 
 .cell img {
+  display: block;
   width: 90%;
+  max-width: 64px;
+  height: auto;
   max-height: 48px;
+  min-height: 28px;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
 }

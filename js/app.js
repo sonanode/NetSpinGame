@@ -246,7 +246,11 @@ function setCellImage(cell, symbolId, blur = false) {
   const sym = SYMBOLS[symbolId];
   const img = cell.querySelector('img');
   if (!sym || !img) return;
-  img.src = symbolImgUrl(sym);
+  const url = symbolImgUrl(sym);
+  if (img.dataset.src !== url) {
+    img.dataset.src = url;
+    img.src = url;
+  }
   img.classList.toggle('blur', blur);
 }
 
