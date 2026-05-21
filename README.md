@@ -2,6 +2,13 @@
 
 Browser slot **4 rows × 5 columns**, **40 paylines**, progressive jackpots, bet/win multipliers, free spins. Uses MK Modern Neon Casino Kit sprites + WAV sounds.
 
+## Play online
+
+**https://sonanode.github.io/NetSpinGame/**
+
+Repository: https://github.com/sonanode/NetSpinGame  
+(To host under `NetSpinGame/NetSpinGame` org, see [DEPLOY.md](DEPLOY.md).)
+
 ## Run locally
 
 ES modules and image paths require a local server (not `file://`).
