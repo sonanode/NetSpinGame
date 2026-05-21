@@ -34,7 +34,7 @@ export const GAME_DEFAULTS = {
   startBalance: 25000,
   maxLineBet: 20,
   defaultLineBet: 1,
-  defaultActiveLines: 20,
+  defaultActiveLines: 40,
   defaultBetMult: 1,
   bigWinMultiplier: 40,
 };
@@ -52,9 +52,17 @@ export function mergeJackpots(stored) {
   if (!stored || typeof stored !== 'object') return out;
   for (const tier of ['mini', 'minor', 'major', 'mega']) {
     const v = Number(stored[tier]);
-    if (Number.isFinite(v) && v >= 0) out[tier] = v;
+    // DB often has zeros from empty json — keep progressive seeds
+    if (Number.isFinite(v) && v > 0) out[tier] = v;
   }
   return out;
+}
+
+/** Stable base URL for symbol PNGs (GitHub Pages subfolder + local) */
+export function symbolAssetBase() {
+  const path = window.location.pathname || '/';
+  const dir = path.endsWith('/') ? path : path.replace(/\/[^/]*$/, '/');
+  return `${window.location.origin}${dir}assets/symbols/`;
 }
 
 export const SPIN_TIMING = {
@@ -65,7 +73,6 @@ export const SPIN_TIMING = {
   postStopPauseMs: 320,
 };
 
-/** Page-relative path — works on GitHub Pages (/NetSpinGame/) and local */
 export function symbolImgUrl(sym) {
-  return new URL(`assets/symbols/${sym.file}`, window.location.href).href;
+  return `${symbolAssetBase()}${sym.file}`;
 }

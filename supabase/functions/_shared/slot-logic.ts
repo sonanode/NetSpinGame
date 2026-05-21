@@ -23,45 +23,45 @@ export const PAYLINE_PATHS: number[][] = [
   [1, 1, 2, 1, 1], [2, 2, 1, 2, 2], [0, 2, 1, 2, 0], [3, 1, 2, 1, 3],
 ];
 
-/** Tuned for ~88–92% RTP demo — not “win every spin” */
+/** 40 lines + lower pays ≈ ~85% RTP — wins exist but not every spin */
 const BASE_PAYTABLE = [
-  { line: [2, 2, 2, -1, -1], pay: 1, freeSpins: 0 },
-  { line: [2, 2, 2, 2, -1], pay: 2, freeSpins: 0 },
-  { line: [2, 2, 2, 2, 2], pay: 4, freeSpins: 0 },
-  { line: [1, 1, 1, -1, -1], pay: 1, freeSpins: 0 },
-  { line: [1, 1, 1, 1, -1], pay: 2, freeSpins: 0 },
-  { line: [1, 1, 1, 1, 1], pay: 5, freeSpins: 0 },
-  { line: [4, 4, 4, -1, -1], pay: 1, freeSpins: 0 },
-  { line: [4, 4, 4, 4, -1], pay: 3, freeSpins: 0 },
-  { line: [4, 4, 4, 4, 4], pay: 6, freeSpins: 0 },
-  { line: [9, 9, 9, -1, -1], pay: 1, freeSpins: 0 },
-  { line: [9, 9, 9, 9, -1], pay: 3, freeSpins: 0 },
-  { line: [9, 9, 9, 9, 9], pay: 7, freeSpins: 0 },
-  { line: [5, 5, 5, -1, -1], pay: 4, freeSpins: 0 },
-  { line: [5, 5, 5, 5, -1], pay: 8, freeSpins: 0 },
-  { line: [5, 5, 5, 5, 5], pay: 12, freeSpins: 0 },
-  { line: [0, 0, 0, -1, -1], pay: 5, freeSpins: 0 },
-  { line: [0, 0, 0, 0, -1], pay: 8, freeSpins: 0 },
-  { line: [0, 0, 0, 0, 0], pay: 14, freeSpins: 0 },
-  { line: [3, 3, 3, -1, -1], pay: 5, freeSpins: 0 },
-  { line: [3, 3, 3, 3, -1], pay: 10, freeSpins: 0 },
-  { line: [3, 3, 3, 3, 3], pay: 16, freeSpins: 0 },
-  { line: [8, 8, 8, -1, -1], pay: 5, freeSpins: 0 },
-  { line: [8, 8, 8, 8, -1], pay: 10, freeSpins: 0 },
-  { line: [8, 8, 8, 8, 8], pay: 18, freeSpins: 0 },
-  { line: [7, 7, 7, -1, -1], pay: 0, freeSpins: 3 },
-  { line: [7, 7, 7, 7, -1], pay: 0, freeSpins: 5 },
-  { line: [7, 7, 7, 7, 7], pay: 0, freeSpins: 8 },
-  { line: [6, 6, 6, 6, 6], pay: 35, freeSpins: 0 },
-  { line: [11, 11, 11, -1, -1], pay: 2, freeSpins: 0, mult: 2 },
-  { line: [11, 11, 11, 11, -1], pay: 6, freeSpins: 0, mult: 2 },
-  { line: [11, 11, 11, 11, 11], pay: 0, freeSpins: 0, mult: 3 },
+  { line: [2, 2, 2, -1, -1], pay: 0, freeSpins: 0 },
+  { line: [2, 2, 2, 2, -1], pay: 1, freeSpins: 0 },
+  { line: [2, 2, 2, 2, 2], pay: 2, freeSpins: 0 },
+  { line: [1, 1, 1, -1, -1], pay: 0, freeSpins: 0 },
+  { line: [1, 1, 1, 1, -1], pay: 1, freeSpins: 0 },
+  { line: [1, 1, 1, 1, 1], pay: 3, freeSpins: 0 },
+  { line: [4, 4, 4, -1, -1], pay: 0, freeSpins: 0 },
+  { line: [4, 4, 4, 4, -1], pay: 2, freeSpins: 0 },
+  { line: [4, 4, 4, 4, 4], pay: 4, freeSpins: 0 },
+  { line: [9, 9, 9, -1, -1], pay: 0, freeSpins: 0 },
+  { line: [9, 9, 9, 9, -1], pay: 2, freeSpins: 0 },
+  { line: [9, 9, 9, 9, 9], pay: 5, freeSpins: 0 },
+  { line: [5, 5, 5, -1, -1], pay: 2, freeSpins: 0 },
+  { line: [5, 5, 5, 5, -1], pay: 5, freeSpins: 0 },
+  { line: [5, 5, 5, 5, 5], pay: 8, freeSpins: 0 },
+  { line: [0, 0, 0, -1, -1], pay: 3, freeSpins: 0 },
+  { line: [0, 0, 0, 0, -1], pay: 5, freeSpins: 0 },
+  { line: [0, 0, 0, 0, 0], pay: 10, freeSpins: 0 },
+  { line: [3, 3, 3, -1, -1], pay: 3, freeSpins: 0 },
+  { line: [3, 3, 3, 3, -1], pay: 6, freeSpins: 0 },
+  { line: [3, 3, 3, 3, 3], pay: 11, freeSpins: 0 },
+  { line: [8, 8, 8, -1, -1], pay: 3, freeSpins: 0 },
+  { line: [8, 8, 8, 8, -1], pay: 6, freeSpins: 0 },
+  { line: [8, 8, 8, 8, 8], pay: 12, freeSpins: 0 },
+  { line: [7, 7, 7, -1, -1], pay: 0, freeSpins: 2 },
+  { line: [7, 7, 7, 7, -1], pay: 0, freeSpins: 4 },
+  { line: [7, 7, 7, 7, 7], pay: 0, freeSpins: 6 },
+  { line: [6, 6, 6, 6, 6], pay: 22, freeSpins: 0 },
+  { line: [11, 11, 11, -1, -1], pay: 1, freeSpins: 0, mult: 2 },
+  { line: [11, 11, 11, 11, -1], pay: 4, freeSpins: 0, mult: 2 },
+  { line: [11, 11, 11, 11, 11], pay: 0, freeSpins: 0, mult: 2 },
 ];
 
 const SCATTER_PAYTABLE = [
-  { count: 3, pay: 2, freeSpins: 4, mult: 2 },
-  { count: 4, pay: 6, freeSpins: 6, mult: 2 },
-  { count: 5, pay: 18, freeSpins: 10, mult: 3 },
+  { count: 3, pay: 1, freeSpins: 3, mult: 2 },
+  { count: 4, pay: 4, freeSpins: 5, mult: 2 },
+  { count: 5, pay: 12, freeSpins: 8, mult: 2 },
 ];
 
 function decodeSymbOrder(hex: string) {
@@ -94,20 +94,20 @@ const REEL_STRIPS = [
 ];
 
 export const JACKPOTS = {
-  mini: { label: 'MINI', seed: 500, contrib: 0.015, odds: 0.002 },
-  minor: { label: 'MINOR', seed: 2500, contrib: 0.02, odds: 0.0008 },
-  major: { label: 'MAJOR', seed: 12000, contrib: 0.025, odds: 0.00025 },
-  mega: { label: 'MEGA', seed: 50000, contrib: 0.03, odds: 0.00004 },
+  mini: { label: 'MINI', seed: 500, contrib: 0.012, odds: 0.0012 },
+  minor: { label: 'MINOR', seed: 2500, contrib: 0.015, odds: 0.0005 },
+  major: { label: 'MAJOR', seed: 12000, contrib: 0.018, odds: 0.00015 },
+  mega: { label: 'MEGA', seed: 50000, contrib: 0.022, odds: 0.000025 },
 };
 
 export const GAME_DEFAULTS = {
   maxLineBet: 20,
   maxActiveLines: 40,
-  defaultActiveLines: 20,
+  defaultActiveLines: 40,
   freeSpinStartMult: 2,
-  freeSpinMultCap: 6,
+  freeSpinMultCap: 5,
   /** Max line+scatter win per spin (× total bet); jackpots extra */
-  maxWinTimesBet: 75,
+  maxWinTimesBet: 40,
 };
 
 function canWildSubstitute(symbolId: number) {

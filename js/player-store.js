@@ -26,7 +26,10 @@ export async function loadProfile (state) {
 
   state.balance = Number(data.balance);
   state.lineBet = data.line_bet;
-  state.activeLines = data.active_lines;
+  state.activeLines = Math.min(
+    40,
+    Math.max(1, Number(data.active_lines) || 40)
+  );
   state.betMult = data.bet_mult;
   state.sound = data.sound;
   state.freeSpinsLeft = Number(data.free_spins_left ?? 0);

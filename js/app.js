@@ -196,22 +196,30 @@ function buildReels() {
 }
 
 function setCellImage(cell, symbolId, blur = false) {
-  const sym = SYMBOLS[symbolId];
+  const id = Number(symbolId);
+  const sym = SYMBOLS[id] ?? SYMBOLS[0];
   const img = cell.querySelector('img');
-  if (!sym || !img) return;
+  if (!img) return;
   const url = symbolImgUrl(sym);
   if (img.dataset.src !== url) {
     img.dataset.src = url;
     img.onerror = () => {
-      const fallback = new URL(
-        `assets/symbols/${sym.file}`,
-        document.baseURI || window.location.href
+      const alt = new URL(
+        `../assets/symbols/${sym.file}`,
+        import.meta.url
       ).href;
-      if (img.src !== fallback) img.src = fallback;
+      if (img.src !== alt) img.src = alt;
     };
     img.src = url;
   }
   img.classList.toggle('blur', blur);
+}
+
+function preloadSymbolImages() {
+  SYMBOLS.forEach((sym) => {
+    const im = new Image();
+    im.src = symbolImgUrl(sym);
+  });
 }
 
 function renderGrid(grid, winningCells = new Set()) {
@@ -543,40 +551,24 @@ async function initGame() {
   audio.setEnabled(state.sound);
   buildBetMultButtons();
   buildReels();
+  preloadSymbolImages();
   state.jackpots = mergeJackpots(state.jackpots);
   renderJackpots();
+  renderGrid(demoGrid());
   bindEvents();
   el.soundToggle.checked = state.sound;
   document.body.addEventListener('click', () => audio.unlock(), { once: true });
 
-  let serverOk = false;
   try {
     const preview = await fetchPreviewGrid();
     applyServerState(preview);
-    if (preview?.grid) {
-      renderGrid(preview.grid);
-      serverOk = true;
-    }
+    if (preview?.grid) renderGrid(preview.grid);
     renderJackpots();
+    el.status.textContent = '4×5 Neon Vegas — Spin to win!';
   } catch (err) {
     console.warn('Preview grid failed:', err);
     el.status.textContent =
       err.message || 'Server not ready — deploy Edge Functions (see SETUP-SECURE.md)';
-  }
-
-  if (!serverOk) {
-    renderGrid(demoGrid());
-    state.jackpots = mergeJackpots(state.jackpots);
-    renderJackpots();
-    if (
-      !el.status.textContent.includes('deploy') &&
-      !el.status.textContent.includes('Edge')
-    ) {
-      el.status.textContent =
-        'Symbols loaded — deploy Supabase spin function to play online';
-    }
-  } else {
-    el.status.textContent = '4×5 Neon Vegas — Spin to win!';
   }
 
   updateHud();
