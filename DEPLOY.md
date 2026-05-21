@@ -6,21 +6,39 @@
 
 Repo: https://github.com/sonanode/NetSpinGame
 
-### Move to `NetSpinGame/NetSpinGame` organization
+### Move to `NetSpinGame/NetSpinGame` (ใช้ Personal Access Token)
 
-1. On GitHub, create an empty public repo: `NetSpinGame/NetSpinGame` (must use an account with org access).
-2. In this folder:
+บัญชี `sonanode` เป็นสมาชิก org แต่ **ยังไม่มีสิทธิ์ Admin** จึงสร้าง repo ใน org โดยตรงไม่ได้ — ต้องใช้ **PAT ของ Owner/Admin** หรือสร้าง repo บนเว็บก่อน
 
-```bash
-git remote set-url origin https://github.com/NetSpinGame/NetSpinGame.git
-git push -u origin master
+#### ขั้นตอน A — สร้าง repo บน GitHub (แนะนำ)
+
+1. Login บัญชีที่เป็น **Owner** ของ org `NetSpinGame`
+2. เปิด: https://github.com/organizations/NetSpinGame/repositories/new  
+   - Name: `NetSpinGame`  
+   - Public  
+   - **ไม่ต้อง** add README (repo ว่าง)
+3. ใน PowerShell ที่โฟลเดอร์ `web-mini-slot`:
+
+```powershell
+$env:GITHUB_PAT = "ghp_ใส่โทเคนของคุณที่นี่"
+.\push-to-netspin-org.ps1
 ```
 
-3. Enable Pages: Settings → Pages → branch `master`, folder `/`.
+โทเคนต้องมี scope: **`repo`** (ถ้าจะให้สคริปต์สร้าง repo ให้เอง ต้องมี **`admin:org`** ด้วย)
 
-URL will be: **https://netspingame.github.io/NetSpinGame/**
+#### ขั้นตอน B — push มือ
 
-Or: GitHub → sonanode/NetSpinGame → Settings → Transfer ownership → NetSpinGame org.
+```powershell
+$env:GITHUB_PAT = "ghp_xxxx"
+git remote add netspin https://x-access-token:$env:GITHUB_PAT@github.com/NetSpinGame/NetSpinGame.git
+git push -u netspin master
+```
+
+จากนั้น: **Settings → Pages →** branch `master`, folder `/`
+
+**เล่นออนไลน์:** https://netspingame.github.io/NetSpinGame/
+
+> อย่าแปะ PAT ในแชทหรือ commit — ใช้แค่ `$env:GITHUB_PAT` ในเครื่องคุณ
 
 ## Self-contained build
 
