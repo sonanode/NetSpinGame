@@ -1,16 +1,8 @@
-import { JACKPOTS } from './config.js';
 import { getSupabase } from './supabase-client.js';
-
-const defaultJackpots = () => ({
-  mini: JACKPOTS.mini.seed,
-  minor: JACKPOTS.minor.seed,
-  major: JACKPOTS.major.seed,
-  mega: JACKPOTS.mega.seed,
-});
+import { saveSettings } from './spin-api.js';
 
 let userId = null;
 let saveTimer = null;
-let pending = null;
 
 export function setUserId (id) {
   userId = id;
@@ -22,7 +14,9 @@ export async function loadProfile (state) {
 
   const { data, error } = await sb
     .from('profiles')
-    .select('balance, line_bet, active_lines, bet_mult, jackpots, sound')
+    .select(
+      'balance, line_bet, active_lines, bet_mult, jackpots, sound, free_spins_left, session_win_mult'
+    )
     .eq('id', userId)
     .maybeSingle();
 
@@ -34,35 +28,32 @@ export async function loadProfile (state) {
   state.activeLines = data.active_lines;
   state.betMult = data.bet_mult;
   state.sound = data.sound;
-  const jp = data.jackpots;
-  if (jp && typeof jp === 'object' && Object.keys(jp).length) {
-    state.jackpots = { ...defaultJackpots(), ...jp };
+  state.freeSpinsLeft = Number(data.free_spins_left ?? 0);
+  state.sessionWinMult = Number(data.session_win_mult ?? 1);
+  if (data.jackpots && typeof data.jackpots === 'object') {
+    state.jackpots = data.jackpots;
   }
   return true;
 }
 
-export function scheduleSave (state) {
-  pending = {
-    balance: state.balance,
-    line_bet: state.lineBet,
-    active_lines: state.activeLines,
-    bet_mult: state.betMult,
-    jackpots: state.jackpots,
+export function scheduleSaveSettings (state) {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    saveSettings({
+      lineBet: state.lineBet,
+      activeLines: state.activeLines,
+      betMult: state.betMult,
+      sound: state.sound,
+    });
+  }, 400);
+}
+
+export async function flushSaveNow (state) {
+  clearTimeout(saveTimer);
+  await saveSettings({
+    lineBet: state.lineBet,
+    activeLines: state.activeLines,
+    betMult: state.betMult,
     sound: state.sound,
-  };
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(flushSave, 400);
-}
-
-async function flushSave () {
-  const sb = getSupabase();
-  if (!sb || !userId || !pending) return;
-  const payload = { ...pending, updated_at: new Date().toISOString() };
-  pending = null;
-  await sb.from('profiles').update(payload).eq('id', userId);
-}
-
-export async function flushSaveNow () {
-  clearTimeout(saveTimer);
-  await flushSave();
+  });
 }

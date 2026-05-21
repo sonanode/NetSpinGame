@@ -4,18 +4,16 @@ import {
   BET_MULTIPLIERS,
   COLS,
   GAME_DEFAULTS,
-  JACKPOTS,
-  PAYLINE_PATHS,
+  MAX_PAYLINES,
   ROWS,
   SPIN_TIMING,
   symbolImgUrl,
   SYMBOLS,
 } from './config.js';
-import { SlotEngine } from './engine.js';
 import * as playerStore from './player-store.js';
+import { fetchPreviewGrid, requestSpin } from './spin-api.js';
 
-const STORAGE_KEY = 'mk_neon_4x5_v2';
-const JP_KEY = 'mk_jackpots_v1';
+const STORAGE_KEY = 'mk_neon_4x5_prefs';
 
 const el = {
   reels: document.getElementById('reels'),
@@ -55,7 +53,6 @@ const el = {
   jpMini: document.getElementById('jpMini'),
 };
 
-const engine = new SlotEngine();
 const state = {
   balance: GAME_DEFAULTS.startBalance,
   lineBet: GAME_DEFAULTS.defaultLineBet,
@@ -69,8 +66,19 @@ const state = {
   sound: true,
   grid: null,
   lastResult: null,
-  jackpots: {},
+  jackpots: { mini: 0, minor: 0, major: 0, mega: 0 },
 };
+
+function applyServerState(data) {
+  if (!data) return;
+  if (typeof data.balance === 'number') state.balance = data.balance;
+  if (typeof data.lineBet === 'number') state.lineBet = data.lineBet;
+  if (typeof data.activeLines === 'number') state.activeLines = data.activeLines;
+  if (typeof data.betMult === 'number') state.betMult = data.betMult;
+  if (typeof data.freeSpinsLeft === 'number') state.freeSpinsLeft = data.freeSpinsLeft;
+  if (typeof data.sessionWinMult === 'number') state.sessionWinMult = data.sessionWinMult;
+  if (data.jackpots) state.jackpots = data.jackpots;
+}
 
 function fmt(n) {
   return Math.floor(n).toLocaleString('en-US');
@@ -80,24 +88,6 @@ function totalBet() {
   return state.lineBet * state.activeLines * state.betMult;
 }
 
-function loadJackpots() {
-  try {
-    const raw = localStorage.getItem(JP_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch (_) {}
-  return {
-    mini: JACKPOTS.mini.seed,
-    minor: JACKPOTS.minor.seed,
-    major: JACKPOTS.major.seed,
-    mega: JACKPOTS.mega.seed,
-  };
-}
-
-function saveJackpots() {
-  localStorage.setItem(JP_KEY, JSON.stringify(state.jackpots));
-  playerStore.scheduleSave(state);
-}
-
 function renderJackpots() {
   el.jpMini.textContent = fmt(state.jackpots.mini);
   el.jpMinor.textContent = fmt(state.jackpots.minor);
@@ -105,60 +95,16 @@ function renderJackpots() {
   el.jpMega.textContent = fmt(state.jackpots.mega);
 }
 
-function contributeJackpots(bet) {
-  for (const [tier, cfg] of Object.entries(JACKPOTS)) {
-    state.jackpots[tier] += Math.floor(bet * cfg.contrib);
-  }
-  saveJackpots();
-  renderJackpots();
+function savePrefs() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ sound: state.sound }));
+  playerStore.scheduleSaveSettings(state);
 }
 
-function tryJackpotWin(wildCount) {
-  if (wildCount >= 8) {
-    const amt = state.jackpots.mega;
-    state.jackpots.mega = JACKPOTS.mega.seed;
-    return { tier: 'mega', label: 'MEGA', amount: amt };
-  }
-  const rolls = [
-    ['mega', JACKPOTS.mega.odds],
-    ['major', JACKPOTS.major.odds],
-    ['minor', JACKPOTS.minor.odds],
-    ['mini', JACKPOTS.mini.odds],
-  ];
-  for (const [tier, odds] of rolls) {
-    if (Math.random() < odds) {
-      const amt = state.jackpots[tier];
-      state.jackpots[tier] = JACKPOTS[tier].seed;
-      return { tier, label: JACKPOTS[tier].label, amount: amt };
-    }
-  }
-  return null;
-}
-
-function save() {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({
-      balance: state.balance,
-      lineBet: state.lineBet,
-      activeLines: state.activeLines,
-      betMult: state.betMult,
-      sound: state.sound,
-    })
-  );
-  playerStore.scheduleSave(state);
-}
-
-function load() {
+function loadPrefs() {
   try {
     const d = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    if (typeof d.balance === 'number') state.balance = d.balance;
-    if (typeof d.lineBet === 'number') state.lineBet = d.lineBet;
-    if (typeof d.activeLines === 'number') state.activeLines = d.activeLines;
-    if (typeof d.betMult === 'number') state.betMult = d.betMult;
     if (typeof d.sound === 'boolean') state.sound = d.sound;
   } catch (_) {}
-  state.jackpots = loadJackpots();
 }
 
 async function ensureAudio() {
@@ -213,7 +159,7 @@ function buildBetMultButtons() {
       await ensureAudio();
       audio.playBuy();
       state.betMult = m;
-      save();
+      savePrefs();
       updateHud();
     };
     el.betMultBtns.appendChild(b);
@@ -322,16 +268,13 @@ function animateReels(finalGrid) {
 
     cols.forEach((col, ci) => {
       col.classList.add('spinning');
-      const strip = engine.getStripForReel(ci);
       const stopMs = Math.round(
         (SPIN_TIMING.firstReelMs + ci * SPIN_TIMING.staggerPerReelMs) * speed
       );
-      let frame = 0;
       const tick = setInterval(() => {
-        frame++;
         for (let r = 0; r < ROWS; r++) {
           const cell = col.querySelector(`.cell[data-row="${r}"]`);
-          const sym = strip[(frame + r + ci * 4) % strip.length];
+          const sym = Math.floor(Math.random() * SYMBOLS.length);
           setCellImage(cell, sym, true);
         }
       }, SPIN_TIMING.frameIntervalMs);
@@ -393,104 +336,85 @@ async function doSpin() {
   audio.playClick();
   updateHud();
 
-  if (!isFree) {
-    state.balance -= bet;
-    contributeJackpots(bet);
-  } else {
-    state.freeSpinsLeft--;
-  }
+  try {
+    const resp = await requestSpin({
+      lineBet: state.lineBet,
+      activeLines: state.activeLines,
+      betMult: state.betMult,
+    });
 
-  const grid = engine.spinGrid();
-  await animateReels(grid);
+    applyServerState(resp);
+    const grid = resp.grid;
+    const result = resp.result;
+    state.lastResult = result;
 
-  const sessionMult = isFree ? state.sessionWinMult : 1;
-  const result = engine.evaluate(
-    grid,
-    state.activeLines,
-    state.lineBet,
-    state.betMult,
-    sessionMult
-  );
-  state.lastResult = result;
+    await animateReels(grid);
 
-  let totalWin = result.totalPay;
-  const jp = tryJackpotWin(result.wildCount);
-  if (jp) {
-    totalWin += jp.amount;
-    audio.playBigWin();
-    audio.playBonus();
-    showJackpotOverlay(jp.label, jp.amount);
-    saveJackpots();
-    renderJackpots();
-  }
-
-  if (totalWin > 0 || result.totalFreeSpins > 0) {
-    state.balance += totalWin;
-    el.lastWin.textContent = fmt(totalWin);
+    const totalWin = resp.totalWin ?? 0;
+    const jp = resp.jackpot;
 
     if (jp) {
-      /* already played */
-    } else if (totalWin >= bet * GAME_DEFAULTS.bigWinMultiplier) {
       audio.playBigWin();
-      showBigWin(
-        'BIG WIN',
-        totalWin,
-        result.effectiveMult > 1 ? `×${result.effectiveMult} multiplier` : ''
-      );
-    } else {
-      audio.playWin();
-      setTimeout(() => audio.playCoins(), 200);
+      audio.playBonus();
+      showJackpotOverlay(jp.label, jp.amount);
+      renderJackpots();
     }
 
-    if (result.scatterWin || result.totalFreeSpins > 0) {
-      audio.playBonus();
-      const sm = result.scatterWin?.mult || 1;
-      state.sessionWinMult = Math.max(
-        state.sessionWinMult,
-        sm,
-        GAME_DEFAULTS.freeSpinStartMult
-      );
-      state.freeSpinsLeft += result.totalFreeSpins;
-      if (result.scatterCount >= 3) {
+    if (totalWin > 0 || result.totalFreeSpins > 0) {
+      el.lastWin.textContent = fmt(totalWin);
+
+      if (jp) {
+        /* sounds played */
+      } else if (totalWin >= bet * GAME_DEFAULTS.bigWinMultiplier) {
+        audio.playBigWin();
         showBigWin(
-          'FREE SPINS',
-          result.totalFreeSpins,
-          `Win multiplier ×${state.sessionWinMult}`
+          'BIG WIN',
+          totalWin,
+          result.effectiveMult > 1 ? `×${result.effectiveMult} multiplier` : ''
         );
+      } else {
+        audio.playWin();
+        setTimeout(() => audio.playCoins(), 200);
       }
+
+      if (result.scatterWin || result.totalFreeSpins > 0) {
+        audio.playBonus();
+        if (result.scatterCount >= 3) {
+          showBigWin(
+            'FREE SPINS',
+            result.totalFreeSpins,
+            `Win multiplier ×${state.sessionWinMult}`
+          );
+        }
+      }
+
+      if (result.lineMultBoost > 1 && !result.scatterWin) {
+        audio.playBonus();
+      }
+
+      const parts = [];
+      if (result.lineWins.length) parts.push(`${result.lineWins.length} lines`);
+      if (result.effectiveMult > 1) parts.push(`×${result.effectiveMult}`);
+      if (result.scatterCount >= 3) parts.push(`${result.scatterCount} scatters`);
+      if (result.totalFreeSpins) parts.push(`+${result.totalFreeSpins} FS`);
+      el.status.textContent = `WIN! ${parts.join(' · ')}`;
+    } else {
+      el.status.textContent = 'No win — spin again!';
     }
 
-    if (result.lineMultBoost > 1 && !result.scatterWin) {
-      audio.playBonus();
+    if (state.freeSpinsLeft === 0 && isFree) {
+      audio.startBgm(false);
     }
 
-    if (isFree && totalWin > 0) {
-      state.sessionWinMult = Math.min(
-        GAME_DEFAULTS.freeSpinMultCap,
-        state.sessionWinMult + 1
-      );
-    }
-
-    const parts = [];
-    if (result.lineWins.length) parts.push(`${result.lineWins.length} lines`);
-    if (result.effectiveMult > 1) parts.push(`×${result.effectiveMult}`);
-    if (result.scatterCount >= 3) parts.push(`${result.scatterCount} scatters`);
-    if (result.totalFreeSpins) parts.push(`+${result.totalFreeSpins} FS`);
-    el.status.textContent = `WIN! ${parts.join(' · ')}`;
-  } else {
-    if (!isFree) state.sessionWinMult = GAME_DEFAULTS.freeSpinStartMult;
-    el.status.textContent = 'No win — spin again!';
+    renderGrid(grid, winningCellKeys(result));
+    renderJackpots();
+    updateHud();
+  } catch (err) {
+    el.status.textContent = err.message || 'Spin failed — deploy server?';
+    state.autoSpin = false;
   }
 
-  if (state.freeSpinsLeft === 0 && isFree) {
-    state.sessionWinMult = 1;
-    audio.startBgm(false);
-  }
-
-  renderGrid(grid, winningCellKeys(result));
   state.spinning = false;
-  save();
-  updateHud();
 
   if (state.autoSpin && (state.autoRemaining > 0 || state.autoRemaining === -1)) {
     if (state.autoRemaining > 0) state.autoRemaining--;
@@ -506,24 +430,12 @@ async function doSpin() {
 
 function paytableHtml() {
   return `
-    <p><strong>4×5 · 40 paylines</strong> — Payouts × line bet × bet multiplier.</p>
-    <h4>Win multiplier</h4>
+    <p><strong>4×5 · 40 paylines</strong> — Server decides wins (not visible in browser).</p>
+    <h4>Features</h4>
     <ul>
-      <li>3+ Scatter: starts free spins with ×2–×5 boost</li>
-      <li>3+ Bonus symbols on grid: up to ×5 on that spin</li>
-      <li>5× Bonus on a line: ×5 instant</li>
-      <li>During free spins: multiplier rises +1 after each winning free spin (max ×10)</li>
-    </ul>
-    <h4>Free spins</h4>
-    <ul>
-      <li>3 Scatter — 8 FS · 4 — 12 FS · 5 — 20 FS</li>
-      <li>FreeSpin symbol lines — 5 / 8 / 12 FS</li>
-    </ul>
-    <h4>Jackpots (progressive)</h4>
-    <ul>
-      <li>Each bet feeds Mini / Minor / Major / Mega</li>
-      <li>Random hit any spin · screen-filling win</li>
-      <li>15+ Wilds on screen forces MEGA</li>
+      <li>Scatter &amp; Bonus multipliers</li>
+      <li>Free spin sessions with rising multiplier</li>
+      <li>Progressive Mini / Minor / Major / Mega jackpots</li>
     </ul>
     <h4>Sounds (kit WAV)</h4>
     <p>Background, spin, win, coins, big win, bonus, button, choose, buy, reel stop + Neon BG in free spins.</p>
@@ -540,28 +452,28 @@ function bindEvents() {
     await ensureAudio();
     audio.playChoose();
     state.lineBet = Math.max(1, state.lineBet - 1);
-    save();
+    savePrefs();
     updateHud();
   };
   el.betUp.onclick = async () => {
     await ensureAudio();
     audio.playChoose();
     state.lineBet = Math.min(GAME_DEFAULTS.maxLineBet, state.lineBet + 1);
-    save();
+    savePrefs();
     updateHud();
   };
   el.linesDown.onclick = async () => {
     await ensureAudio();
     audio.playChoose();
     state.activeLines = Math.max(1, state.activeLines - 1);
-    save();
+    savePrefs();
     updateHud();
   };
   el.linesUp.onclick = async () => {
     await ensureAudio();
     audio.playChoose();
-    state.activeLines = Math.min(PAYLINE_PATHS.length, state.activeLines + 1);
-    save();
+    state.activeLines = Math.min(MAX_PAYLINES, state.activeLines + 1);
+    savePrefs();
     updateHud();
   };
 
@@ -569,9 +481,9 @@ function bindEvents() {
     await ensureAudio();
     audio.playBuy();
     state.lineBet = GAME_DEFAULTS.maxLineBet;
-    state.activeLines = PAYLINE_PATHS.length;
+    state.activeLines = MAX_PAYLINES;
     state.betMult = BET_MULTIPLIERS[BET_MULTIPLIERS.length - 1];
-    save();
+    savePrefs();
     updateHud();
   };
 
@@ -605,7 +517,7 @@ function bindEvents() {
     state.sound = el.soundToggle.checked;
     audio.setEnabled(state.sound);
     if (state.sound) await audio.unlock();
-    save();
+    savePrefs();
   };
 
   window.addEventListener('resize', () => {
@@ -613,18 +525,25 @@ function bindEvents() {
   });
 }
 
-function initGame() {
+async function initGame() {
   audio.setEnabled(state.sound);
   buildBetMultButtons();
   buildReels();
   renderJackpots();
-  const grid = engine.spinGrid();
-  renderGrid(grid);
   bindEvents();
   el.soundToggle.checked = state.sound;
   document.body.addEventListener('click', () => audio.unlock(), { once: true });
+  try {
+    const preview = await fetchPreviewGrid();
+    applyServerState(preview);
+    if (preview.grid) renderGrid(preview.grid);
+  } catch (err) {
+    el.status.textContent = err.message || 'Server not ready — deploy Edge Functions';
+  }
   updateHud();
-  el.status.textContent = '4×5 Neon Vegas — Spin to win!';
+  if (!el.status.textContent.includes('deploy')) {
+    el.status.textContent = '4×5 Neon Vegas — Spin to win!';
+  }
 }
 
 async function boot() {
@@ -642,22 +561,22 @@ async function boot() {
     label.title = session.user.email ?? '';
   }
   logoutBtn?.addEventListener('click', async () => {
-    await playerStore.flushSaveNow();
+    await playerStore.flushSaveNow(state);
     await signOut();
     window.location.replace('index.html');
   });
 
-  load();
+  loadPrefs();
   try {
     await playerStore.loadProfile(state);
   } catch (err) {
-    console.warn('Cloud profile load failed, using local cache.', err);
+    console.warn('Cloud profile load failed.', err);
   }
 
-  initGame();
+  await initGame();
 
   window.addEventListener('beforeunload', () => {
-    playerStore.flushSaveNow();
+    playerStore.flushSaveNow(state);
   });
 }
 
