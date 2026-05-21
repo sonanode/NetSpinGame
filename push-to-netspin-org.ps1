@@ -5,15 +5,17 @@
 
 param(
   [string]$Org = "NetSpinGame",
-  [string]$Repo = "NetSpinGame"
+  [string]$Repo = "NetSpinGame",
+  [string]$Token = ""
 )
 
 $ErrorActionPreference = "Stop"
-$token = $env:GITHUB_PAT
+$token = if ($Token) { $Token } else { $env:GITHUB_PAT }
 if (-not $token) {
-  Write-Host "Set your Personal Access Token first:" -ForegroundColor Yellow
-  Write-Host '  $env:GITHUB_PAT = "ghp_..."' -ForegroundColor Cyan
-  Write-Host "Scopes needed: repo, and admin:org (to create org repo) OR create empty repo on GitHub UI first."
+  Write-Host "Provide token:" -ForegroundColor Yellow
+  Write-Host '  .\push-to-netspin-org.ps1 -Token "ghp_..."' -ForegroundColor Cyan
+  Write-Host '  or: $env:GITHUB_PAT = "ghp_..."; .\push-to-netspin-org.ps1' -ForegroundColor Cyan
+  Write-Host "Scopes: repo (+ admin:org to auto-create repository)"
   exit 1
 }
 

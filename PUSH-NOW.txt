@@ -1,0 +1,16 @@
+สร้าง repo แล้ว push ไป NetSpinGame/NetSpinGame (รันคำสั่งเดียวใน PowerShell)
+================================================================================
+
+1) สร้าง repo ว่างบนเว็บ (ถ้ายังไม่มี):
+   https://github.com/organizations/NetSpinGame/repositories/new
+   ชื่อ: NetSpinGame | Public | ไม่ต้องใส่ README
+
+2) เปิด PowerShell ในโฟลเดอร์ web-mini-slot แล้วรัน (แทน ghp_xxx ด้วย PAT จริง):
+
+   .\push-to-netspin-org.ps1 -Token "ghp_xxxxxxxxxxxxxxxxxxxx"
+
+3) รอ 1-3 นาที แล้วเปิด:
+   https://netspingame.github.io/NetSpinGame/
+
+เกมเล่นได้แล้วที่ (สำรอง):
+   https://sonanode.github.io/NetSpinGame/
