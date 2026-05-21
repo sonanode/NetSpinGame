@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Neon Vegas — 4×5 Slots</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="vegas-bg"></div>
+  <div class="app">
+    <header class="top-bar">
+      <div class="brand">
+        <span class="brand-main">NEON VEGAS</span>
+        <span class="brand-sub">4 × 5 · 40 LINES</span>
+      </div>
+      <label class="sound-toggle">
+        <input type="checkbox" id="soundToggle" checked />
+        <span>Sound</span>
+      </label>
+    </header>
+
+    <section class="jackpots" aria-label="Progressive jackpots">
+      <div class="jp jp-mega" data-tier="mega">
+        <span class="jp-label">MEGA</span>
+        <span class="jp-val" id="jpMega">0</span>
+      </div>
+      <div class="jp jp-major" data-tier="major">
+        <span class="jp-label">MAJOR</span>
+        <span class="jp-val" id="jpMajor">0</span>
+      </div>
+      <div class="jp jp-minor" data-tier="minor">
+        <span class="jp-label">MINOR</span>
+        <span class="jp-val" id="jpMinor">0</span>
+      </div>
+      <div class="jp jp-mini" data-tier="mini">
+        <span class="jp-label">MINI</span>
+        <span class="jp-val" id="jpMini">0</span>
+      </div>
+    </section>
+
+    <section class="hud">
+      <div class="hud-cell">
+        <span class="lbl">Balance</span>
+        <span class="val" id="balance">0</span>
+      </div>
+      <div class="hud-cell accent">
+        <span class="lbl">Last Win</span>
+        <span class="val" id="lastWin">0</span>
+      </div>
+      <div class="hud-cell">
+        <span class="lbl">Win Multiplier</span>
+        <span class="val mult" id="winMult">×1</span>
+      </div>
+      <div class="hud-cell">
+        <span class="lbl">Free Spins</span>
+        <span class="val" id="freeSpins">—</span>
+      </div>
+    </section>
+
+    <div class="machine-frame">
+      <div class="reels-wrap">
+        <canvas id="lineCanvas" class="line-canvas" aria-hidden="true"></canvas>
+        <div id="reels" class="reels" role="grid" aria-label="Slot reels 4 by 5"></div>
+      </div>
+      <p class="status" id="status">Good luck!</p>
+    </div>
+
+    <section class="bet-panel">
+      <div class="bet-row">
+        <span class="lbl">Line Bet</span>
+        <div class="stepper">
+          <button type="button" id="betDown" class="btn chip">−</button>
+          <span id="lineBet" class="num">1</span>
+          <button type="button" id="betUp" class="btn chip">+</button>
+        </div>
+      </div>
+      <div class="bet-row">
+        <span class="lbl">Bet Multiplier</span>
+        <div class="mult-btns" id="betMultBtns"></div>
+      </div>
+      <div class="bet-row">
+        <span class="lbl">Lines</span>
+        <div class="stepper">
+          <button type="button" id="linesDown" class="btn chip">−</button>
+          <span id="activeLines" class="num">40</span>
+          <button type="button" id="linesUp" class="btn chip">+</button>
+        </div>
+      </div>
+      <div class="bet-row total-row">
+        <span class="lbl">Total Bet</span>
+        <span id="totalBet" class="num big">40</span>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button type="button" id="paytableBtn" class="btn side">Paytable</button>
+      <button type="button" id="autoBtn" class="btn side">AUTO</button>
+      <button type="button" id="spinBtn" class="btn spin-main">SPIN</button>
+      <button type="button" id="maxBetBtn" class="btn side">MAX BET</button>
+    </section>
+
+    <footer class="footer">
+      <a href="sound-preview.html">Sounds</a> ·
+      <a href="asset-preview.html">Assets</a> · Entertainment only
+    </footer>
+  </div>
+
+  <div id="bigWin" class="overlay-win">
+    <div class="overlay-win-box">
+      <p class="ow-tag" id="bigWinTag">BIG WIN</p>
+      <p class="ow-amt" id="bigWinAmount">0</p>
+      <p class="ow-sub" id="bigWinSub"></p>
+    </div>
+  </div>
+
+  <div id="jackpotWin" class="overlay-win jp-overlay">
+    <div class="overlay-win-box">
+      <p class="ow-tag" id="jpWinTag">JACKPOT</p>
+      <p class="ow-amt" id="jpWinAmount">0</p>
+    </div>
+  </div>
+
+  <div id="overlay" class="modal-overlay">
+    <div class="modal">
+      <header class="modal-head">
+        <h2 id="overlayTitle">Info</h2>
+        <button type="button" id="overlayClose" class="btn chip">×</button>
+      </header>
+      <div id="overlayBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

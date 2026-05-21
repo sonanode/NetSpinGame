@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MK Slot — Sound Preview (All WAV)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f0a1a;
+      color: #eee;
+      padding: 20px;
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+    h1 { font-size: 1.25rem; margin-bottom: 8px; color: #ff6ee0; }
+    h2 { font-size: 1rem; margin: 24px 0 12px; color: #6ef0ff; }
+    p.note { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; }
+    .card {
+      background: #1a1230;
+      border: 1px solid #4a2870;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .card h3 { font-size: 1rem; margin-bottom: 4px; }
+    .path { font-size: 0.75rem; color: #888; word-break: break-all; margin-bottom: 8px; }
+    .hint { font-size: 0.85rem; color: #b8a8d0; margin-bottom: 10px; }
+    audio { width: 100%; margin-top: 6px; }
+    .play-all { margin: 16px 0; }
+    button {
+      background: linear-gradient(#ff5ae0, #b8189a);
+      border: none;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+    a { color: #6ef0ff; }
+    .err { color: #f88; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <h1>เสียงทั้งหมดจาก Unity Kit</h1>
+  <p class="note">
+    ไฟล์แยกไว้ใน <code>web-mini-slot/sounds/common/</code> และ <code>sounds/neon/</code> (คัดลอกจาก Unity แล้ว).<br />
+    เปิดผ่าน local server (เช่น <a href="index.html">เกม</a> · <a href="asset-preview.html">รูป & แม่แบบ</a>). ฟังแล้วบอกเลขหรือชื่อไฟล์ที่อยากใส่ในเกม
+  </p>
+  <div class="play-all">
+    <button type="button" id="stopAll">หยุดทุกเสียง</button>
+  </div>
+
+  <h2>ชุด Common (11 ไฟล์)</h2>
+  <p class="note">โฟลเดอร์: <code>sounds/common/</code></p>
+  <div id="common-list"></div>
+
+  <h2>ชุด Neon Background (1 ไฟล์)</h2>
+  <p class="note">โฟลเดอร์: <code>sounds/neon/</code></p>
+  <div id="neon-list"></div>
+
+  <script>
+    const SOUNDS = [
+      {
+        group: 'common',
+        url: 'sounds/common/Background.wav',
+        name: 'Background.wav',
+        hint: 'เพลงพื้นหลังหลัก (SoundMaster / StartMusic)',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/spin_sound.wav',
+        name: 'spin_sound.wav',
+        hint: 'เสียงหมุน / สปิน (ใช้ใน Slot)',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/win_sound.wav',
+        name: 'win_sound.wav',
+        hint: 'เสียงชนะทั่วไป',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/win_coins.wav',
+        name: 'win_coins.wav',
+        hint: 'เสียงเหรียญ / จ่ายรางวัล (Jackpot win)',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/big_win.wav',
+        name: 'big_win.wav',
+        hint: 'Big Win',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/Loose.wav',
+        name: 'Loose.wav',
+        hint: 'แพ้ / ไม่ชนะ (Loose state)',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/Bonus.wav',
+        name: 'Bonus.wav',
+        hint: 'โบนัส / อีเวนต์พิเศษ',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/button.wav',
+        name: 'button.wav',
+        hint: 'กดปุ่ม UI',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/choose.wav',
+        name: 'choose.wav',
+        hint: 'เลือกเมนู / ไลน์',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/Buy.wav',
+        name: 'Buy.wav',
+        hint: 'ซื้อของใน Shop',
+      },
+      {
+        group: 'common',
+        url: 'sounds/common/pointer_hit.wav',
+        name: 'pointer_hit.wav',
+        hint: 'Fortune Wheel — ตัวชี้กระทบ',
+      },
+      {
+        group: 'neon',
+        url: 'sounds/neon/background.wav',
+        name: 'background.wav (Neon)',
+        hint: 'เพลงพื้นหลังชุด Modern Neon (ทางเลือก)',
+      },
+    ];
+
+    function render() {
+      const containers = { common: document.getElementById('common-list'), neon: document.getElementById('neon-list') };
+      SOUNDS.forEach((s, i) => {
+        const url = s.url;
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${i + 1}. ${s.name}</h3>
+          <div class="path">${s.url}</div>
+          <div class="hint">${s.hint}</div>
+          <audio controls preload="metadata" src="${url}"></audio>
+          <p class="err" hidden></p>
+        `;
+        const audio = card.querySelector('audio');
+        audio.addEventListener('error', () => {
+          card.querySelector('.err').hidden = false;
+          card.querySelector('.err').textContent = 'โหลดไม่ได้ — ตรวจว่าเปิดผ่าน server จาก root โปรเจกต์ Unity';
+        });
+        containers[s.group].appendChild(card);
+      });
+    }
+
+    document.getElementById('stopAll').addEventListener('click', () => {
+      document.querySelectorAll('audio').forEach((a) => {
+        a.pause();
+        a.currentTime = 0;
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>

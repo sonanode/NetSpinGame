@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MK Kit — รูป & แม่แบบทั้งหมด</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0614;
+      --panel: #16102a;
+      --border: #4a2870;
+      --accent: #ff3dff;
+      --cyan: #00f0ff;
+      --text: #eee;
+      --muted: #9a8ab8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Rajdhani, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(10, 6, 20, 0.95);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+    h1 { font-size: 1.2rem; color: var(--accent); }
+    .sub { font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+    }
+    .stat b { color: var(--cyan); }
+    nav.tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    nav.tabs button {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+    }
+    nav.tabs button.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(255, 61, 255, 0.3);
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+      align-items: center;
+    }
+    .toolbar input, .toolbar select {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-family: inherit;
+      min-width: 200px;
+    }
+    main { padding: 16px; max-width: 1400px; margin: 0 auto; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .pack-block { margin-bottom: 28px; }
+    .pack-block h2 {
+      font-size: 1rem;
+      color: var(--cyan);
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .cat-block { margin-bottom: 20px; }
+    .cat-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 10px 12px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      user-select: none;
+    }
+    .cat-head:hover { border-color: var(--accent); }
+    .cat-head .count { color: var(--muted); font-size: 0.85rem; }
+    .cat-head .arrow { margin-left: auto; transition: transform 0.2s; }
+    .cat-block.open .arrow { transform: rotate(90deg); }
+    .grid {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 10px;
+      padding: 4px 0 12px;
+    }
+    .cat-block.open .grid { display: grid; }
+    .thumb {
+      background: #0d0818;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: zoom-in;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .thumb:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 14px rgba(255, 61, 255, 0.25);
+    }
+    .thumb img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: contain;
+      background: #05030c;
+      display: block;
+    }
+    .thumb span {
+      display: block;
+      font-size: 0.65rem;
+      padding: 4px 6px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .list-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .list-table th, .list-table td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: left;
+    }
+    .list-table th { background: var(--panel); color: var(--cyan); }
+    .list-table tr:hover td { background: rgba(90, 40, 138, 0.2); }
+    .list-table code { font-size: 0.75rem; color: var(--muted); word-break: break-all; }
+    .desc { color: var(--muted); font-size: 0.85rem; }
+    .loading { padding: 40px; text-align: center; color: var(--muted); }
+    .links { margin-top: 8px; }
+    .links a { color: var(--cyan); margin-right: 14px; font-size: 0.9rem; }
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+    #lightbox.open { display: flex; }
+    #lightbox img {
+      max-width: 95vw;
+      max-height: 75vh;
+      object-fit: contain;
+    }
+    #lightbox p { margin-top: 12px; color: var(--muted); font-size: 0.9rem; text-align: center; }
+    #lightbox button {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.4rem;
+    }
+    .expand-all {
+      background: transparent;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>รูปภาพ & แม่แบบ — MK Modern Neon Casino Kit</h1>
+    <p class="sub">ดูทุก PNG, Scene (.unity) และ Prefab ใน Asset — คลิกรูปขยายใหญ่</p>
+    <div class="links">
+      <a href="index.html">← กลับเกม</a>
+      <a href="sound-preview.html">เสียง 12 ไฟล์</a>
+    </div>
+    <div class="stats" id="stats"></div>
+    <nav class="tabs">
+      <button type="button" class="active" data-tab="images">รูป PNG</button>
+      <button type="button" data-tab="scenes">Scene แม่แบบ</button>
+      <button type="button" data-tab="prefabs">Prefab แม่แบบ</button>
+    </nav>
+    <div class="toolbar" id="toolbar-images">
+      <input type="search" id="search" placeholder="ค้นหาชื่อไฟล์..." />
+      <select id="packFilter">
+        <option value="">ทุก Pack</option>
+        <option value="1b_ModernSuitsSlot">Modern Suits</option>
+        <option value="1_ModernNeonSlot">Modern Neon</option>
+        <option value="0_Common">Common</option>
+      </select>
+      <button type="button" class="expand-all" id="expandAll">ขยายทุกหมวด</button>
+      <button type="button" class="expand-all" id="collapseAll">ยุบทุกหมวด</button>
+    </div>
+    <div class="toolbar" id="toolbar-scenes" hidden>
+      <input type="search" id="searchScenes" placeholder="ค้นหา scene..." />
+    </div>
+    <div class="toolbar" id="toolbar-prefabs" hidden>
+      <input type="search" id="searchPrefabs" placeholder="ค้นหา prefab..." />
+      <select id="prefabPack">
+        <option value="">ทุก Pack</option>
+      </select>
+    </div>
+  </header>
+
+  <main>
+    <div id="panel-images" class="panel active"><div class="loading">กำลังโหลด manifest...</div></div>
+    <div id="panel-scenes" class="panel"></div>
+    <div id="panel-prefabs" class="panel"></div>
+  </main>
+
+  <div id="lightbox" role="dialog" aria-modal="true">
+    <button type="button" aria-label="ปิด">×</button>
+    <img src="" alt="" />
+    <p></p>
+  </div>
+
+  <script>
+    const SCENE_HINTS = {
+      '1_Lobby': 'หน้า Lobby เลือกเกม',
+      '1_MNeon_Lobby': 'Lobby ชุด Neon',
+      '2_Slot_3X5': 'สล็อต 3×5 มาตรฐาน (เว็บใช้ตัวนี้)',
+      '2_MNeon_3X5_W20_FW': 'Neon 3×5 · 20 เส้น · Free Spin/Wild',
+      '3_Slot_3X3': 'สล็อต 3×3',
+      '3_MNeon_3X5_W20_FW_JP': 'Neon 3×5 + Jackpot',
+      '4_Slot_4X5': 'สล็อต 4×5',
+      '4_MNeon_3X3_W10_FW': 'Neon 3×3 · 10 ways',
+      '5_Slot_3X5_243ways': '3×5 · 243 ways',
+      '5_MNeon_1-2-3-2-1_W12_FW': 'รีล 1-2-3-2-1 · 12 ways',
+      '6_Slot_1-2-3-2-1': 'รีลไม่เท่ากัน 1-2-3-2-1',
+      '6_MNeon_2-3-4-3-2_W144_FW': 'รีล 2-3-4-3-2 · 144 ways',
+      '7_Slot_3X3_Bonusgame': '3×3 + Bonus game',
+      '7_MNeon_3X5_W20_H_FW': '3×5 Hold + Free Spin',
+      '8_Slot_3X5Jackpot': '3×5 + Jackpot',
+      '8_MNeon_4X5_W1024_FW': '4×5 · 1024 ways',
+      '9_Slot_3X5Hold': '3×5 Hold feature',
+      '10_Slot_4X5_1024ways': '4×5 · 1024 ways',
+      '11_Slot_2-3-4-3-2': 'รีล 2-3-4-3-2',
+      '2_MNeon_3X5_W20_FW_RTPadj': 'RTP ปรับทดสอบ (Dev)',
+    };
+
+    const PACK_LABEL = {
+      '1b_ModernSuitsSlot': 'Modern Suits Slot',
+      '1_ModernNeonSlot': 'Modern Neon Slot',
+      '0_Common': 'Common (ใช้ร่วมทุกเกม)',
+    };
+
+    let manifest = null;
+
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = lightbox.querySelector('img');
+    const lbText = lightbox.querySelector('p');
+    lightbox.querySelector('button').onclick = () => lightbox.classList.remove('open');
+    lightbox.onclick = (e) => { if (e.target === lightbox) lightbox.classList.remove('open'); };
+
+    function openLightbox(url, name, path) {
+      lbImg.src = url;
+      lbImg.alt = name;
+      lbText.textContent = path;
+      lightbox.classList.add('open');
+    }
+
+    function groupBy(arr, keyFn) {
+      const m = new Map();
+      for (const item of arr) {
+        const k = keyFn(item);
+        if (!m.has(k)) m.set(k, []);
+        m.get(k).push(item);
+      }
+      return m;
+    }
+
+    function renderStats() {
+      document.getElementById('stats').innerHTML = `
+        <span class="stat"><b>${manifest.stats.images}</b> รูป PNG</span>
+        <span class="stat"><b>${manifest.stats.scenes}</b> Scene</span>
+        <span class="stat"><b>${manifest.stats.prefabs}</b> Prefab</span>
+        <span class="stat">อัปเดต ${new Date(manifest.generated).toLocaleString('th-TH')}</span>
+      `;
+    }
+
+    function renderImages(filter = '', pack = '') {
+      const root = document.getElementById('panel-images');
+      let imgs = manifest.images;
+      if (pack) imgs = imgs.filter((i) => i.file.startsWith(pack + '/'));
+      if (filter) {
+        const q = filter.toLowerCase();
+        imgs = imgs.filter((i) => i.name.toLowerCase().includes(q) || i.category.toLowerCase().includes(q));
+      }
+
+      const byPack = groupBy(imgs, (i) => i.file.split('/')[0]);
+      const packOrder = ['1b_ModernSuitsSlot', '1_ModernNeonSlot', '0_Common'];
+      root.innerHTML = '';
+
+      for (const packId of packOrder) {
+        if (!byPack.has(packId)) continue;
+        const packImgs = byPack.get(packId);
+        const byCat = groupBy(packImgs, (i) => i.category);
+        const block = document.createElement('div');
+        block.className = 'pack-block';
+        block.innerHTML = `<h2>${PACK_LABEL[packId] || packId} (${packImgs.length} รูป)</h2>`;
+
+        const cats = [...byCat.keys()].sort();
+        for (const cat of cats) {
+          const items = byCat.get(cat);
+          const catEl = document.createElement('div');
+          catEl.className = 'cat-block';
+          catEl.innerHTML = `
+            <div class="cat-head">
+              <strong>${cat.replace(packId + '/', '')}</strong>
+              <span class="count">${items.length} ไฟล์</span>
+              <span class="arrow">▶</span>
+            </div>
+            <div class="grid"></div>
+          `;
+          const grid = catEl.querySelector('.grid');
+          for (const item of items) {
+            const t = document.createElement('div');
+            t.className = 'thumb';
+            t.title = item.file;
+            t.innerHTML = `<img loading="lazy" src="${item.url}" alt="${item.name}" /><span>${item.name}</span>`;
+            t.onclick = () => openLightbox(item.url, item.name, item.file);
+            grid.appendChild(t);
+          }
+          catEl.querySelector('.cat-head').onclick = () => catEl.classList.toggle('open');
+          block.appendChild(catEl);
+        }
+        root.appendChild(block);
+      }
+
+      if (!root.children.length) {
+        root.innerHTML = '<p class="loading">ไม่พบรูปตามคำค้น</p>';
+      }
+    }
+
+    function renderScenes(filter = '') {
+      const root = document.getElementById('panel-scenes');
+      let scenes = manifest.scenes;
+      if (filter) {
+        const q = filter.toLowerCase();
+        scenes = scenes.filter((s) => s.name.toLowerCase().includes(q) || s.file.toLowerCase().includes(q));
+      }
+      const byPack = groupBy(scenes, (s) => s.pack);
+      root.innerHTML = '';
+
+      for (const [packId, list] of byPack) {
+        const block = document.createElement('div');
+        block.className = 'pack-block';
+        block.innerHTML = `<h2>${PACK_LABEL[packId] || packId}</h2>`;
+        const table = document.createElement('table');
+        table.className = 'list-table';
+        table.innerHTML = '<thead><tr><th>Scene</th><th>คำอธิบาย</th><th>ไฟล์</th></tr></thead>';
+        const tbody = document.createElement('tbody');
+        for (const s of list.sort((a, b) => a.name.localeCompare(b.name))) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${s.name}</strong></td>
+            <td class="desc">${SCENE_HINTS[s.name] || 'แม่แบบสล็อต / หน้าจอ'}</td>
+            <td><code>${s.file}</code></td>
+          `;
+          tbody.appendChild(tr);
+        }
+        table.appendChild(tbody);
+        block.appendChild(table);
+        root.appendChild(block);
+      }
+    }
+
+    function renderPrefabs(filter = '', pack = '') {
+      const root = document.getElementById('panel-prefabs');
+      let pf = manifest.prefabs;
+      if (pack) pf = pf.filter((p) => p.file.startsWith(pack + '/'));
+      if (filter) {
+        const q = filter.toLowerCase();
+        pf = pf.filter((p) => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+      }
+      const byCat = groupBy(pf, (p) => {
+        const parts = p.category.split('/');
+        return parts.length >= 2 ? parts.slice(0, 2).join('/') : p.category;
+      });
+      root.innerHTML = '<p class="desc" style="margin-bottom:12px">Prefab = แม่แบบ UI/เกมใน Unity (เปิดใน Editor ไม่แสดงเป็นรูปตรงๆ)</p>';
+
+      const cats = [...byCat.keys()].sort();
+      for (const cat of cats) {
+        const list = byCat.get(cat).sort((a, b) => a.name.localeCompare(b.name));
+        const block = document.createElement('div');
+        block.className = 'cat-block open';
+        block.innerHTML = `
+          <div class="cat-head">
+            <strong>${cat}</strong>
+            <span class="count">${list.length} prefab</span>
+          </div>
+        `;
+        const table = document.createElement('table');
+        table.className = 'list-table';
+        table.innerHTML = '<thead><tr><th>ชื่อ</th><th>Path</th></tr></thead>';
+        const tbody = document.createElement('tbody');
+        for (const p of list) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${p.name}</td><td><code>${p.file}</code></td>`;
+          tbody.appendChild(tr);
+        }
+        table.appendChild(tbody);
+        block.appendChild(table);
+        root.appendChild(block);
+      }
+    }
+
+    function setupTabs() {
+      const tabs = document.querySelectorAll('.tabs button');
+      const panels = {
+        images: document.getElementById('panel-images'),
+        scenes: document.getElementById('panel-scenes'),
+        prefabs: document.getElementById('panel-prefabs'),
+      };
+      const toolbars = {
+        images: document.getElementById('toolbar-images'),
+        scenes: document.getElementById('toolbar-scenes'),
+        prefabs: document.getElementById('toolbar-prefabs'),
+      };
+      tabs.forEach((btn) => {
+        btn.onclick = () => {
+          tabs.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          Object.values(panels).forEach((p) => p.classList.remove('active'));
+          Object.values(toolbars).forEach((t) => t.hidden = true);
+          const id = btn.dataset.tab;
+          panels[id].classList.add('active');
+          toolbars[id].hidden = false;
+        };
+      });
+    }
+
+    function fillPrefabPackFilter() {
+      const packs = new Set(manifest.prefabs.map((p) => p.file.split('/')[0]));
+      const sel = document.getElementById('prefabPack');
+      for (const p of [...packs].sort()) {
+        const o = document.createElement('option');
+        o.value = p;
+        o.textContent = PACK_LABEL[p] || p;
+        sel.appendChild(o);
+      }
+    }
+
+    async function init() {
+      try {
+        const res = await fetch('asset-manifest.json');
+        manifest = await res.json();
+      } catch (e) {
+        document.getElementById('panel-images').innerHTML =
+          '<p class="loading">โหลด asset-manifest.json ไม่ได้ — รัน server จาก root โปรเจกต์</p>';
+        return;
+      }
+      renderStats();
+      renderImages();
+      renderScenes();
+      renderPrefabs();
+      fillPrefabPackFilter();
+      setupTabs();
+
+      document.getElementById('search').oninput = (e) =>
+        renderImages(e.target.value, document.getElementById('packFilter').value);
+      document.getElementById('packFilter').onchange = (e) =>
+        renderImages(document.getElementById('search').value, e.target.value);
+      document.getElementById('searchScenes').oninput = (e) => renderScenes(e.target.value);
+      document.getElementById('searchPrefabs').oninput = (e) =>
+        renderPrefabs(e.target.value, document.getElementById('prefabPack').value);
+      document.getElementById('prefabPack').onchange = (e) =>
+        renderPrefabs(document.getElementById('searchPrefabs').value, e.target.value);
+
+      document.getElementById('expandAll').onclick = () =>
+        document.querySelectorAll('#panel-images .cat-block').forEach((c) => c.classList.add('open'));
+      document.getElementById('collapseAll').onclick = () =>
+        document.querySelectorAll('#panel-images .cat-block').forEach((c) => c.classList.remove('open'));
+    }
+
+    init();
+  </script>
+</body>
+</html>
