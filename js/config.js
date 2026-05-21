@@ -141,5 +141,5 @@ export const SPIN_TIMING = {
 };
 
 export function symbolImgUrl(sym) {
-  return `${ASSET_BASE}/Symbols/${encodeURIComponent(sym.file)}`;
+  return `${ASSET_BASE}/${encodeURIComponent(sym.file)}`;
 }
