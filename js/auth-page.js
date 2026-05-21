@@ -90,9 +90,6 @@ function bindAuthUi () {
   document.getElementById('btnGoogle')?.addEventListener('click', () => {
     oauth('google', 'Google');
   });
-  document.getElementById('btnFacebook')?.addEventListener('click', () => {
-    oauth('facebook', 'Facebook');
-  });
 
   el.formSignIn.onsubmit = async (e) => {
     e.preventDefault();
