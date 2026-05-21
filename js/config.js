@@ -36,7 +36,7 @@ export const GAME_DEFAULTS = {
   defaultLineBet: 1,
   defaultActiveLines: 20,
   defaultBetMult: 1,
-  bigWinMultiplier: 25,
+  bigWinMultiplier: 40,
 };
 
 export const SPIN_TIMING = {
