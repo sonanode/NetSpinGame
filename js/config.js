@@ -39,6 +39,24 @@ export const GAME_DEFAULTS = {
   bigWinMultiplier: 40,
 };
 
+/** Match server seeds in slot-logic.ts — used when DB has empty jackpots */
+export const DEFAULT_JACKPOTS = {
+  mini: 500,
+  minor: 2500,
+  major: 12000,
+  mega: 50000,
+};
+
+export function mergeJackpots(stored) {
+  const out = { ...DEFAULT_JACKPOTS };
+  if (!stored || typeof stored !== 'object') return out;
+  for (const tier of ['mini', 'minor', 'major', 'mega']) {
+    const v = Number(stored[tier]);
+    if (Number.isFinite(v) && v >= 0) out[tier] = v;
+  }
+  return out;
+}
+
 export const SPIN_TIMING = {
   firstReelMs: 2400,
   staggerPerReelMs: 450,
@@ -47,6 +65,7 @@ export const SPIN_TIMING = {
   postStopPauseMs: 320,
 };
 
+/** Page-relative path — works on GitHub Pages (/NetSpinGame/) and local */
 export function symbolImgUrl(sym) {
-  return new URL(`../assets/symbols/${sym.file}`, import.meta.url).href;
+  return new URL(`assets/symbols/${sym.file}`, window.location.href).href;
 }

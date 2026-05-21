@@ -8,7 +8,7 @@ create table if not exists public.profiles (
   line_bet int not null default 1 check (line_bet >= 1 and line_bet <= 20),
   active_lines int not null default 20 check (active_lines >= 1 and active_lines <= 40),
   bet_mult int not null default 1,
-  jackpots jsonb not null default '{}'::jsonb,
+  jackpots jsonb not null default '{"mini":500,"minor":2500,"major":12000,"mega":50000}'::jsonb,
   sound boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

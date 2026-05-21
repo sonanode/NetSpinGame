@@ -5,6 +5,7 @@ import {
   COLS,
   GAME_DEFAULTS,
   MAX_PAYLINES,
+  mergeJackpots,
   ROWS,
   SPIN_TIMING,
   symbolImgUrl,
@@ -66,7 +67,7 @@ const state = {
   sound: true,
   grid: null,
   lastResult: null,
-  jackpots: { mini: 0, minor: 0, major: 0, mega: 0 },
+  jackpots: mergeJackpots(null),
 };
 
 function applyServerState(data) {
@@ -77,7 +78,7 @@ function applyServerState(data) {
   if (typeof data.betMult === 'number') state.betMult = data.betMult;
   if (typeof data.freeSpinsLeft === 'number') state.freeSpinsLeft = data.freeSpinsLeft;
   if (typeof data.sessionWinMult === 'number') state.sessionWinMult = data.sessionWinMult;
-  if (data.jackpots) state.jackpots = data.jackpots;
+  if (data.jackpots) state.jackpots = mergeJackpots(data.jackpots);
 }
 
 function fmt(n) {
@@ -166,6 +167,12 @@ function buildBetMultButtons() {
   });
 }
 
+function demoGrid() {
+  return Array.from({ length: ROWS }, () =>
+    Array.from({ length: COLS }, () => Math.floor(Math.random() * SYMBOLS.length))
+  );
+}
+
 function buildReels() {
   el.reels.innerHTML = '';
   for (let c = 0; c < COLS; c++) {
@@ -195,6 +202,13 @@ function setCellImage(cell, symbolId, blur = false) {
   const url = symbolImgUrl(sym);
   if (img.dataset.src !== url) {
     img.dataset.src = url;
+    img.onerror = () => {
+      const fallback = new URL(
+        `assets/symbols/${sym.file}`,
+        document.baseURI || window.location.href
+      ).href;
+      if (img.src !== fallback) img.src = fallback;
+    };
     img.src = url;
   }
   img.classList.toggle('blur', blur);
@@ -529,21 +543,43 @@ async function initGame() {
   audio.setEnabled(state.sound);
   buildBetMultButtons();
   buildReels();
+  state.jackpots = mergeJackpots(state.jackpots);
   renderJackpots();
   bindEvents();
   el.soundToggle.checked = state.sound;
   document.body.addEventListener('click', () => audio.unlock(), { once: true });
+
+  let serverOk = false;
   try {
     const preview = await fetchPreviewGrid();
     applyServerState(preview);
-    if (preview.grid) renderGrid(preview.grid);
+    if (preview?.grid) {
+      renderGrid(preview.grid);
+      serverOk = true;
+    }
+    renderJackpots();
   } catch (err) {
-    el.status.textContent = err.message || 'Server not ready — deploy Edge Functions';
+    console.warn('Preview grid failed:', err);
+    el.status.textContent =
+      err.message || 'Server not ready — deploy Edge Functions (see SETUP-SECURE.md)';
   }
-  updateHud();
-  if (!el.status.textContent.includes('deploy')) {
+
+  if (!serverOk) {
+    renderGrid(demoGrid());
+    state.jackpots = mergeJackpots(state.jackpots);
+    renderJackpots();
+    if (
+      !el.status.textContent.includes('deploy') &&
+      !el.status.textContent.includes('Edge')
+    ) {
+      el.status.textContent =
+        'Symbols loaded — deploy Supabase spin function to play online';
+    }
+  } else {
     el.status.textContent = '4×5 Neon Vegas — Spin to win!';
   }
+
+  updateHud();
 }
 
 async function boot() {

@@ -1,3 +1,4 @@
+import { mergeJackpots } from './config.js';
 import { getSupabase } from './supabase-client.js';
 import { saveSettings } from './spin-api.js';
 
@@ -30,9 +31,7 @@ export async function loadProfile (state) {
   state.sound = data.sound;
   state.freeSpinsLeft = Number(data.free_spins_left ?? 0);
   state.sessionWinMult = Number(data.session_win_mult ?? 1);
-  if (data.jackpots && typeof data.jackpots === 'object') {
-    state.jackpots = data.jackpots;
-  }
+  state.jackpots = mergeJackpots(data.jackpots);
   return true;
 }
 
