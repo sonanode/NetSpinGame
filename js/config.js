@@ -148,7 +148,7 @@ export const SPIN_TIMING = {
   postStopPauseMs: 320,
 };
 
+/** Resolve PNG path from module location (works on GitHub Pages + local server) */
 export function symbolImgUrl(sym) {
-  const root = getSiteRoot();
-  return `${root}${ASSET_BASE}/${encodeURIComponent(sym.file)}`;
+  return new URL(`../assets/symbols/${sym.file}`, import.meta.url).href;
 }
