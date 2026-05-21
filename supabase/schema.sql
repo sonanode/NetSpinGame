@@ -6,7 +6,7 @@ create table if not exists public.profiles (
   display_name text,
   balance bigint not null default 25000 check (balance >= 0),
   line_bet int not null default 1 check (line_bet >= 1 and line_bet <= 20),
-  active_lines int not null default 40 check (active_lines >= 1 and active_lines <= 40),
+  active_lines int not null default 20 check (active_lines >= 1 and active_lines <= 40),
   bet_mult int not null default 1,
   jackpots jsonb not null default '{}'::jsonb,
   sound boolean not null default true,

@@ -34,7 +34,7 @@ export const GAME_DEFAULTS = {
   startBalance: 25000,
   maxLineBet: 20,
   defaultLineBet: 1,
-  defaultActiveLines: 40,
+  defaultActiveLines: 20,
   defaultBetMult: 1,
   bigWinMultiplier: 25,
 };

@@ -6,6 +6,7 @@ import {
   GAME_DEFAULTS,
   spinGrid,
   contributeJackpots,
+  capRegularWin,
   tryJackpotWin,
 } from '../_shared/slot-logic.ts';
 
@@ -103,6 +104,7 @@ Deno.serve(async (req) => {
     const sessionMult = isFree ? sessionWinMult : 1;
     const result = evaluate(grid, activeLines, lineBet, betMult, sessionMult);
 
+    result.totalPay = capRegularWin(result.totalPay, bet);
     let totalWin = result.totalPay;
     const jackpot = tryJackpotWin(jackpots, result.wildCount);
     if (jackpot) totalWin += jackpot.amount;
