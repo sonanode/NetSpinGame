@@ -2,9 +2,11 @@
 
 Browser slot **4 rows × 5 columns**, **40 paylines**, progressive jackpots, bet/win multipliers, free spins. Uses MK Modern Neon Casino Kit sprites + WAV sounds.
 
-## Play online
+## Members-only play
 
-**https://sonanode.github.io/NetSpinGame/**
+1. Open **https://sonanode.github.io/NetSpinGame/** — register or sign in  
+2. After login → **game.html** (4×5 slot)  
+3. Balance saved per account in **Supabase** (see [SETUP-SUPABASE.md](SETUP-SUPABASE.md))
 
 Repository: https://github.com/sonanode/NetSpinGame  
 (To host under `NetSpinGame/NetSpinGame` org, see [DEPLOY.md](DEPLOY.md).)
@@ -18,7 +20,7 @@ cd web-mini-slot
 npx --yes serve . -p 3456
 ```
 
-Open: http://localhost:3456
+Open: http://localhost:3456/ (login) → http://localhost:3456/game.html (game)
 
 Or from project root:
 

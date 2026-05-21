@@ -1,3 +1,4 @@
+import { requireSession, signOut } from './auth.js';
 import { audio } from './audio.js';
 import {
   BET_MULTIPLIERS,
@@ -11,6 +12,7 @@ import {
   SYMBOLS,
 } from './config.js';
 import { SlotEngine } from './engine.js';
+import * as playerStore from './player-store.js';
 
 const STORAGE_KEY = 'mk_neon_4x5_v2';
 const JP_KEY = 'mk_jackpots_v1';
@@ -93,6 +95,7 @@ function loadJackpots() {
 
 function saveJackpots() {
   localStorage.setItem(JP_KEY, JSON.stringify(state.jackpots));
+  playerStore.scheduleSave(state);
 }
 
 function renderJackpots() {
@@ -143,6 +146,7 @@ function save() {
       sound: state.sound,
     })
   );
+  playerStore.scheduleSave(state);
 }
 
 function load() {
@@ -605,8 +609,7 @@ function bindEvents() {
   });
 }
 
-function init() {
-  load();
+function initGame() {
   audio.setEnabled(state.sound);
   buildBetMultButtons();
   buildReels();
@@ -620,4 +623,38 @@ function init() {
   el.status.textContent = '4×5 Neon Vegas — Spin to win!';
 }
 
-init();
+async function boot() {
+  const session = await requireSession();
+  if (!session) {
+    window.location.replace('index.html');
+    return;
+  }
+
+  playerStore.setUserId(session.user.id);
+  const label = document.getElementById('userLabel');
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (label) {
+    label.textContent = session.user.email ?? 'Player';
+    label.title = session.user.email ?? '';
+  }
+  logoutBtn?.addEventListener('click', async () => {
+    await playerStore.flushSaveNow();
+    await signOut();
+    window.location.replace('index.html');
+  });
+
+  load();
+  try {
+    await playerStore.loadProfile(state);
+  } catch (err) {
+    console.warn('Cloud profile load failed, using local cache.', err);
+  }
+
+  initGame();
+
+  window.addEventListener('beforeunload', () => {
+    playerStore.flushSaveNow();
+  });
+}
+
+boot();

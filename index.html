@@ -3,137 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Neon Vegas — 4×5 Slots</title>
+  <title>Neon Vegas — Sign in</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/auth.css" />
 </head>
 <body>
   <div class="vegas-bg"></div>
-  <div class="app">
-    <header class="top-bar">
-      <div class="brand">
-        <span class="brand-main">NEON VEGAS</span>
-        <span class="brand-sub">4 × 5 · 40 LINES</span>
-      </div>
-      <label class="sound-toggle">
-        <input type="checkbox" id="soundToggle" checked />
-        <span>Sound</span>
-      </label>
+
+  <main class="auth-page">
+    <header class="auth-hero">
+      <h1>NEON VEGAS</h1>
+      <p>Members only — create an account or sign in to play the 4×5 slot.</p>
     </header>
 
-    <section class="jackpots" aria-label="Progressive jackpots">
-      <div class="jp jp-mega" data-tier="mega">
-        <span class="jp-label">MEGA</span>
-        <span class="jp-val" id="jpMega">0</span>
-      </div>
-      <div class="jp jp-major" data-tier="major">
-        <span class="jp-label">MAJOR</span>
-        <span class="jp-val" id="jpMajor">0</span>
-      </div>
-      <div class="jp jp-minor" data-tier="minor">
-        <span class="jp-label">MINOR</span>
-        <span class="jp-val" id="jpMinor">0</span>
-      </div>
-      <div class="jp jp-mini" data-tier="mini">
-        <span class="jp-label">MINI</span>
-        <span class="jp-val" id="jpMini">0</span>
-      </div>
-    </section>
-
-    <section class="hud">
-      <div class="hud-cell">
-        <span class="lbl">Balance</span>
-        <span class="val" id="balance">0</span>
-      </div>
-      <div class="hud-cell accent">
-        <span class="lbl">Last Win</span>
-        <span class="val" id="lastWin">0</span>
-      </div>
-      <div class="hud-cell">
-        <span class="lbl">Win Multiplier</span>
-        <span class="val mult" id="winMult">×1</span>
-      </div>
-      <div class="hud-cell">
-        <span class="lbl">Free Spins</span>
-        <span class="val" id="freeSpins">—</span>
-      </div>
-    </section>
-
-    <div class="machine-frame">
-      <div class="reels-wrap">
-        <canvas id="lineCanvas" class="line-canvas" aria-hidden="true"></canvas>
-        <div id="reels" class="reels" role="grid" aria-label="Slot reels 4 by 5"></div>
-      </div>
-      <p class="status" id="status">Good luck!</p>
+    <div id="keySetup" class="auth-card key-setup" hidden>
+      <p class="auth-social-label">Connect Supabase (one time)</p>
+      <p class="key-setup-hint">Supabase → Settings → API Keys → copy <strong>anon public</strong> or <strong>Publishable</strong> key</p>
+      <label for="anonKeyInput">API key</label>
+      <input id="anonKeyInput" type="password" class="auth-form" placeholder="eyJ... or sb_publishable_..." autocomplete="off" />
+      <button type="button" id="saveKeyBtn" class="auth-submit">Save &amp; connect</button>
     </div>
 
-    <section class="bet-panel">
-      <div class="bet-row">
-        <span class="lbl">Line Bet</span>
-        <div class="stepper">
-          <button type="button" id="betDown" class="btn chip">−</button>
-          <span id="lineBet" class="num">1</span>
-          <button type="button" id="betUp" class="btn chip">+</button>
-        </div>
+    <p id="configWarn" class="config-warn" hidden></p>
+
+    <div id="authMain" class="auth-card">
+      <div class="auth-tabs" role="tablist">
+        <button type="button" class="auth-tab active" data-tab="signin">SIGN IN</button>
+        <button type="button" class="auth-tab" data-tab="signup">REGISTER</button>
       </div>
-      <div class="bet-row">
-        <span class="lbl">Bet Multiplier</span>
-        <div class="mult-btns" id="betMultBtns"></div>
+
+      <div class="auth-social">
+        <p class="auth-social-label">Quick sign in</p>
+        <button type="button" id="btnGoogle" class="auth-social-btn google">Continue with Google</button>
+        <button type="button" id="btnFacebook" class="auth-social-btn facebook">Continue with Facebook</button>
       </div>
-      <div class="bet-row">
-        <span class="lbl">Lines</span>
-        <div class="stepper">
-          <button type="button" id="linesDown" class="btn chip">−</button>
-          <span id="activeLines" class="num">40</span>
-          <button type="button" id="linesUp" class="btn chip">+</button>
-        </div>
+      <p class="auth-divider"><span>or use email</span></p>
+
+      <div id="panelSignIn">
+        <form id="formSignIn" class="auth-form">
+          <label for="inEmail">Email</label>
+          <input id="inEmail" name="email" type="email" autocomplete="email" required />
+
+          <label for="inPassword">Password</label>
+          <input id="inPassword" name="password" type="password" autocomplete="current-password" required />
+
+          <button type="submit" class="auth-submit">SIGN IN &amp; PLAY</button>
+        </form>
       </div>
-      <div class="bet-row total-row">
-        <span class="lbl">Total Bet</span>
-        <span id="totalBet" class="num big">40</span>
+
+      <div id="panelSignUp" hidden>
+        <form id="formSignUp" class="auth-form">
+          <label for="upName">Display name</label>
+          <input id="upName" name="displayName" type="text" autocomplete="nickname" maxlength="32" />
+
+          <label for="upEmail">Email</label>
+          <input id="upEmail" name="email" type="email" autocomplete="email" required />
+
+          <label for="upPassword">Password</label>
+          <input id="upPassword" name="password" type="password" autocomplete="new-password" minlength="6" required />
+
+          <label for="upPassword2">Confirm password</label>
+          <input id="upPassword2" name="password2" type="password" autocomplete="new-password" minlength="6" required />
+
+          <button type="submit" class="auth-submit">CREATE ACCOUNT</button>
+        </form>
       </div>
-    </section>
 
-    <section class="actions">
-      <button type="button" id="paytableBtn" class="btn side">Paytable</button>
-      <button type="button" id="autoBtn" class="btn side">AUTO</button>
-      <button type="button" id="spinBtn" class="btn spin-main">SPIN</button>
-      <button type="button" id="maxBetBtn" class="btn side">MAX BET</button>
-    </section>
+    </div><!-- #authMain -->
 
-    <footer class="footer">
-      <a href="sound-preview.html">Sounds</a> ·
-      <a href="asset-preview.html">Assets</a> · Entertainment only
-    </footer>
-  </div>
+    <p id="authMsg" class="auth-msg" hidden></p>
 
-  <div id="bigWin" class="overlay-win">
-    <div class="overlay-win-box">
-      <p class="ow-tag" id="bigWinTag">BIG WIN</p>
-      <p class="ow-amt" id="bigWinAmount">0</p>
-      <p class="ow-sub" id="bigWinSub"></p>
-    </div>
-  </div>
+    <footer class="auth-footer">Entertainment only · No real money</footer>
+  </main>
 
-  <div id="jackpotWin" class="overlay-win jp-overlay">
-    <div class="overlay-win-box">
-      <p class="ow-tag" id="jpWinTag">JACKPOT</p>
-      <p class="ow-amt" id="jpWinAmount">0</p>
-    </div>
-  </div>
-
-  <div id="overlay" class="modal-overlay">
-    <div class="modal">
-      <header class="modal-head">
-        <h2 id="overlayTitle">Info</h2>
-        <button type="button" id="overlayClose" class="btn chip">×</button>
-      </header>
-      <div id="overlayBody" class="modal-body"></div>
-    </div>
-  </div>
-
-  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/auth-page.js"></script>
 </body>
 </html>
