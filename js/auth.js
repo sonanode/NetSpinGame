@@ -48,7 +48,30 @@ export async function signInWithProvider (provider, redirectPath = 'dashboard.ht
 export async function signOut () {
   const sb = getSupabase();
   if (!sb) return;
-  await sb.auth.signOut();
+  try {
+    await sb.auth.signOut({ scope: 'global' });
+  } catch {
+    await sb.auth.signOut();
+  }
+}
+
+/** Full logout — clears persisted Supabase session (fixes admin bounce-back) */
+export async function signOutAndClear () {
+  const sb = getSupabase();
+  if (sb) {
+    try {
+      await sb.auth.signOut({ scope: 'global' });
+    } catch {
+      try {
+        await sb.auth.signOut();
+      } catch (_) {}
+    }
+  }
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith('sb-') && key.includes('auth')) {
+      localStorage.removeItem(key);
+    }
+  });
 }
 
 export function onAuthStateChange (callback) {

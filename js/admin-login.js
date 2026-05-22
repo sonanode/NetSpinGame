@@ -6,12 +6,22 @@ import {
   signIn,
   signInWithProvider,
   signOut,
+  signOutAndClear,
 } from './auth.js';
 import { checkIsAdmin } from './admin-api.js';
 import { saveAnonKeyAndConnect } from './supabase-client.js';
 
 const CONSOLE_URL = 'admin.html';
 const STAFF_EMAIL_HINT = 'team.sonanode@gmail.com';
+
+function wantsLogout() {
+  return new URLSearchParams(window.location.search).has('signed_out');
+}
+
+function clearLogoutQuery() {
+  if (!wantsLogout()) return;
+  history.replaceState(null, '', 'admin-login.html');
+}
 
 function hasAuthTokensInUrl() {
   const h = window.location.hash || '';
@@ -99,7 +109,7 @@ function bindAuthUi() {
   });
 
   el.btnSignOutOther?.addEventListener('click', async () => {
-    await signOut();
+    await signOutAndClear();
     el.btnSignOutOther.hidden = true;
     showMsg('Signed out. Sign in with a staff account.', 'info');
   });
@@ -111,6 +121,14 @@ function showKeySetup(show) {
 }
 
 async function continueBoot() {
+  if (wantsLogout()) {
+    await signOutAndClear();
+    clearLogoutQuery();
+    showMsg('Signed out successfully.', 'success');
+    bindAuthUi();
+    return;
+  }
+
   if (hasAuthTokensInUrl()) {
     showMsg('Completing Google sign-in…', 'info');
     const session = await waitForSession();
@@ -126,8 +144,13 @@ async function continueBoot() {
     return;
   }
 
+  let authHooked = false;
   onAuthStateChange((s) => {
-    if (s && isConfigured()) afterAuth(s);
+    if (wantsLogout() || authHooked) return;
+    if (s && isConfigured()) {
+      authHooked = true;
+      afterAuth(s);
+    }
   });
 
   bindAuthUi();

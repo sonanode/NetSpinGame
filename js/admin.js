@@ -1,4 +1,4 @@
-import { onAuthStateChange, requireSession, signOut } from './auth.js';
+import { onAuthStateChange, requireSession, signOutAndClear } from './auth.js';
 import {
   adminAdjustCredits,
   adminAdjustWallet,
@@ -295,8 +295,8 @@ function bindNav() {
   });
   window.addEventListener('popstate', () => showPanel(panelFromHash(), { updateHash: false }));
   el.btnSignOut?.addEventListener('click', async () => {
-    await signOut();
-    window.location.replace('admin-login.html');
+    await signOutAndClear();
+    window.location.replace('admin-login.html?signed_out=1');
   });
 }
 
@@ -327,15 +327,15 @@ async function boot() {
   el.email.textContent = session.user.email || 'Admin';
 
   onAuthStateChange((s) => {
-    if (!s) window.location.replace(ADMIN_LOGIN);
+    if (!s) window.location.replace(`${ADMIN_LOGIN}?signed_out=1`);
   });
 
   try {
     const ok = await checkIsAdmin();
     if (!ok) {
       showToast('Not an administrator. Use admin-login with a staff account.', true);
-      await signOut();
-      setTimeout(() => window.location.replace(ADMIN_LOGIN), 1600);
+      await signOutAndClear();
+      setTimeout(() => window.location.replace(`${ADMIN_LOGIN}?signed_out=1`), 1600);
       return;
     }
   } catch (err) {
