@@ -1,8 +1,19 @@
 # Deploy — NetSpinGame
 
+## Custom domain (ทำก่อนต่อระบบสมาชิก)
+
+ดูคู่มือเต็ม: **[SETUP-DOMAIN.md](./SETUP-DOMAIN.md)**
+
+```powershell
+.\setup-domain.ps1
+# หรือ: .\setup-domain.ps1 -Domain "www.yourdomain.com"
+```
+
 ## GitHub Pages (live)
 
 **https://sonanode.github.io/NetSpinGame/**
+
+หลังติดตั้งโดเมนแล้ว ใช้ `https://www.yourdomain.com/` แทน (ไม่มี `/NetSpinGame/` ใน URL)
 
 Repo: https://github.com/sonanode/NetSpinGame
 
