@@ -1,5 +1,14 @@
-import { requireSession, signOut } from './auth.js';
+import { onAuthStateChange, requireSession, signOut } from './auth.js';
 import { getSupabase } from './supabase-client.js';
+
+function clearAuthHashFromUrl() {
+  if (!window.location.hash) return;
+  history.replaceState(
+    null,
+    '',
+    window.location.pathname + window.location.search
+  );
+}
 
 const el = {
   memberId: document.getElementById('memberId'),
@@ -197,6 +206,11 @@ async function boot() {
     window.location.replace('index.html');
     return;
   }
+
+  clearAuthHashFromUrl();
+  onAuthStateChange((s) => {
+    if (!s) window.location.replace('index.html');
+  });
 
   bindUi();
 

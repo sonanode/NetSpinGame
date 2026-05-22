@@ -2,6 +2,7 @@ import {
   getConfigError,
   getSession,
   isConfigured,
+  onAuthStateChange,
   signIn,
   signInWithProvider,
   signUp,
@@ -66,12 +67,23 @@ async function boot () {
   await continueBoot();
 }
 
+function goDashboard () {
+  const dest = new URL('dashboard.html', window.location.href);
+  dest.hash = window.location.hash;
+  dest.search = window.location.search;
+  window.location.replace(dest.href);
+}
+
 async function continueBoot () {
   const session = await getSession();
   if (session && isConfigured()) {
-    window.location.replace('dashboard.html');
+    goDashboard();
     return;
   }
+
+  onAuthStateChange((s) => {
+    if (s && isConfigured()) goDashboard();
+  });
 
   bindAuthUi();
 }
@@ -127,7 +139,7 @@ function bindAuthUi () {
       return;
     }
     if (data.session) {
-      window.location.replace('dashboard.html');
+      goDashboard();
       return;
     }
     showMsg(
