@@ -415,13 +415,15 @@ async function doSpin() {
   audio.playClick();
 
   let betPrepaid = false;
+  let freeSpinPrepaid = false;
   if (!isFree) {
     state.balance -= bet;
     betPrepaid = true;
-    updateHud();
   } else {
-    updateHud();
+    state.freeSpinsLeft--;
+    freeSpinPrepaid = true;
   }
+  updateHud();
 
   let grid;
   let result;
@@ -429,15 +431,28 @@ async function doSpin() {
   let jp = null;
 
   try {
-    const resp = await runSpin(state, { skipBetDeduct: betPrepaid });
+    const resp = await runSpin(state, {
+      skipBetDeduct: betPrepaid,
+      skipFreeSpinDeduct: freeSpinPrepaid,
+      isFreeSpin: isFree,
+    });
 
-    applyServerState({ ...resp, balance: undefined });
+    applyServerState({
+      ...resp,
+      balance: undefined,
+      freeSpinsLeft: undefined,
+      sessionWinMult: undefined,
+    });
     grid = resp.grid;
     result = resp.result;
 
     await animateReels(grid);
 
     if (typeof resp.balance === 'number') state.balance = resp.balance;
+    if (typeof resp.freeSpinsLeft === 'number') state.freeSpinsLeft = resp.freeSpinsLeft;
+    if (typeof resp.sessionWinMult === 'number') {
+      state.sessionWinMult = resp.sessionWinMult;
+    }
     state.lastResult = result;
 
     totalWin = resp.totalWin ?? 0;
@@ -502,9 +517,8 @@ async function doSpin() {
     renderJackpots();
   } catch (err) {
     console.warn(err);
-    if (betPrepaid) {
-      state.balance += bet;
-    }
+    if (betPrepaid) state.balance += bet;
+    if (freeSpinPrepaid) state.freeSpinsLeft++;
     el.status.textContent = err.message || 'Spin failed';
     state.autoSpin = false;
     updateHud();

@@ -46,8 +46,11 @@ export function previewGrid() {
 
 export async function runSpin(state, options = {}) {
   const bet = state.lineBet * state.activeLines * state.betMult;
-  const isFree = state.freeSpinsLeft > 0;
+  const isFree =
+    options.isFreeSpin === true ||
+    (state.freeSpinsLeft > 0 && !options.skipFreeSpinDeduct);
   const skipBetDeduct = options.skipBetDeduct === true;
+  const skipFreeSpinDeduct = options.skipFreeSpinDeduct === true;
 
   if (!isFree && state.balance < bet) {
     throw new Error('Insufficient balance');
@@ -71,7 +74,7 @@ export async function runSpin(state, options = {}) {
   if (!isFree) {
     if (!skipBetDeduct) state.balance -= bet;
     contributeJackpots(state.jackpots, bet);
-  } else {
+  } else if (!skipFreeSpinDeduct) {
     state.freeSpinsLeft--;
   }
 
