@@ -634,7 +634,7 @@ async function initGame() {
   const preview = previewGrid();
   renderGrid(preview.grid);
   renderJackpots();
-  el.status.textContent = '4×5 Neon Vegas — Spin to win!';
+  el.status.textContent = 'Spin to win!';
 
   updateHud();
 }
