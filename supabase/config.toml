@@ -1,0 +1,8 @@
+# NetSpinGame — Supabase project
+project_id = "tjaqcnaslxjuklaiivjs"
+
+[api]
+enabled = true
+
+[functions]
+verify_jwt = true

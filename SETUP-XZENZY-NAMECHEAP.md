@@ -17,14 +17,21 @@
 
 > ใส่จุดท้าย `sonanode.github.io.` หรือไม่ใส่ก็ได้ (Namecheap มักเติมให้)
 
-4. (แนะนำ) ให้เข้า `xzenzy.com` ไป `www` ด้วย — แท็บ **Domain** → **Redirect Domain**:
-   - Redirect: `xzenzy.com` → `https://www.xzenzy.com`
-   - ประเภท: **Permanent (301)**
+4. **บังคับสำหรับ HTTPS บน GitHub** — เพิ่ม A record ที่โดเมนราก `@` (แก้ข้อความ `xzenzy.com is improperly configured`):
 
-หรือใช้ **URL Redirect Record** ใน Advanced DNS:
-- Host: `@` → `https://www.xzenzy.com`
+| Type | Host | Value |
+|------|------|-------|
+| **A** | `@` | `185.199.108.153` |
+| **A** | `@` | `185.199.109.153` |
+| **A** | `@` | `185.199.110.153` |
+| **A** | `@` | `185.199.111.153` |
 
-5. ลบ CNAME/A เก่าที่ขัดกับ GitHub (ถ้ามี parking page)
+> ลบ A record เก่าของ `@` ที่ชี้ที่อื่น (เช่น parking) ก่อนเพิ่ม 4 รายการนี้
+
+5. (ทางเลือก) แท็บ **Domain** → **Redirect Domain**: `xzenzy.com` → `https://www.xzenzy.com` (301)  
+   — ใช้คู่กับ A record ด้านบน ไม่ใช่แทน A record
+
+6. ลบ CNAME/A เก่าที่ขัดกับ GitHub (ถ้ามี parking page)
 
 รอ DNS 5–30 นาที
 
