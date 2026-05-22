@@ -75,17 +75,7 @@ h3,
   height: 3.1rem;
 }
 
-.brand-logo-spin-g {
-  transform-origin: 20px 21px;
-  transform-box: fill-box;
-  animation: brand-logo-orbit 5s linear infinite;
-}
-
-@keyframes brand-logo-orbit {
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Rotation is inside logo-x.svg / favicon.svg (center pivot, ~14s) */
 
 .brand-lockup {
   display: flex;
@@ -94,8 +84,3 @@ h3,
   gap: 12px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .brand-logo-spin-g {
-    animation: none;
-  }
-}

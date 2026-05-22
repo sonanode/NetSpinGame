@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="XZENZY">
+  <defs>
+    <linearGradient id="xzenzyLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff8e1"/>
+      <stop offset="22%" stop-color="#ffd54f"/>
+      <stop offset="45%" stop-color="#ff8f00"/>
+      <stop offset="68%" stop-color="#ff3dff"/>
+      <stop offset="100%" stop-color="#ff9af0"/>
+    </linearGradient>
+    <filter id="xzenzyLogoGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="0.5" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g transform="translate(20 20)">
+    <g filter="url(#xzenzyLogoGlow)">
+      <g>
+        <animateTransform
+          attributeName="transform"
+          type="rotate"
+          from="0"
+          to="360"
+          dur="14s"
+          repeatCount="indefinite"/>
+        <text
+          x="0"
+          y="0"
+          text-anchor="middle"
+          dominant-baseline="central"
+          font-family="Noto Serif Thai, Georgia, Times New Roman, serif"
+          font-size="27"
+          font-weight="700"
+          fill="url(#xzenzyLogoGrad)">X</text>
+      </g>
+    </g>
+  </g>
+</svg>
