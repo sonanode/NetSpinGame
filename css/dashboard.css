@@ -135,8 +135,20 @@
   color: var(--pink);
 }
 
-.dash-ni-link {
+.dash-ni-link,
+a.dash-ni {
   text-decoration: none;
+  color: inherit;
+}
+
+.dash-ni-admin {
+  color: var(--gold) !important;
+}
+
+.dash-ni-admin:hover,
+.dash-ni-admin.on {
+  color: var(--gold) !important;
+  background: rgba(255, 213, 79, 0.12);
 }
 
 .dash-panel {

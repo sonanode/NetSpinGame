@@ -1,0 +1,96 @@
+/* XZENZY admin — extends dashboard layout */
+.admin-body .admin-tag {
+  color: var(--gold);
+}
+
+.admin-logo-area {
+  background: linear-gradient(180deg, rgba(40, 20, 10, 0.98), rgba(22, 16, 42, 0.95));
+}
+
+.admin-topbar {
+  background: rgba(30, 18, 8, 0.9);
+}
+
+.admin-link-member {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--cyan);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-link-member:hover {
+  color: var(--text);
+}
+
+.admin-user-email {
+  font-size: 0.72rem;
+  color: var(--muted);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-badge {
+  margin-left: auto;
+  background: var(--pink);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.admin-search-form {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  max-width: 100%;
+}
+
+.admin-search-form .dash-input {
+  flex: 1;
+  min-width: 180px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.admin-btn-sm {
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 6px;
+  border: 1px solid var(--border-dim);
+  background: rgba(123, 63, 184, 0.25);
+  color: var(--text);
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.admin-btn-sm:hover {
+  border-color: var(--cyan);
+}
+
+.admin-btn-ok {
+  border-color: rgba(110, 231, 183, 0.5);
+  color: var(--success);
+}
+
+.admin-btn-no {
+  border-color: rgba(248, 113, 113, 0.5);
+  color: #fca5a5;
+}
+
+.admin-wrap code {
+  font-size: 0.85em;
+  color: var(--cyan);
+}

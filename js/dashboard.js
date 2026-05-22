@@ -20,6 +20,23 @@ import {
 
 const REF_KEY = 'xzenzy_ref';
 
+const DEFAULT_PANEL = 'dashboard';
+const VALID_PANELS = new Set([
+  'dashboard',
+  'network',
+  'invite',
+  'deposit',
+  'transfer-bal',
+  'transfer-cr',
+  'withdraw',
+  'buy',
+  'leaderboard',
+  'commission',
+  'profile',
+  'kyc',
+  'settings',
+]);
+
 const PANEL_TITLES = {
   dashboard: 'Dashboard',
   network: 'My Network',
@@ -62,8 +79,20 @@ const el = {
   buyPreview: document.getElementById('buyPreview'),
   buyUsdt: document.getElementById('buyUsdt'),
   btnSignOut: document.getElementById('btnSignOut'),
+  navAdmin: document.getElementById('navAdmin'),
   toast: document.getElementById('dashToast'),
 };
+
+function panelFromHash() {
+  const id = window.location.hash.replace(/^#/, '').trim().toLowerCase();
+  return VALID_PANELS.has(id) ? id : DEFAULT_PANEL;
+}
+
+function syncHash(panel, replace = false) {
+  const path = `${window.location.pathname}${window.location.search}#${panel}`;
+  if (replace) history.replaceState({ panel }, '', path);
+  else history.pushState({ panel }, '', path);
+}
 
 let session = null;
 let profile = null;
@@ -129,6 +158,7 @@ function ledgerLabel(row) {
     transfer_in: row.currency === 'CR' ? 'Credits received' : 'USDT received',
     transfer_out: row.currency === 'CR' ? 'Credits sent' : 'USDT sent',
     commission: 'Direct bonus',
+    admin_adjust: 'Admin adjustment',
   };
   return map[row.type] || row.type;
 }
@@ -185,6 +215,7 @@ function fillHeader() {
   el.memberAvatar.textContent = initials(name, email);
   el.memberAvatar.title = email;
   el.memberRank.textContent = (profile?.rank || 'MEMBER').toUpperCase();
+  if (el.navAdmin) el.navAdmin.hidden = !profile?.is_admin;
 
   el.statWallet.innerHTML = `${fmtUsdt(wallet)}<span class="dash-stat-unit">USDT</span>`;
   el.statCredits.innerHTML = `${fmt(profile?.balance ?? 0)}<span class="dash-stat-unit">Cr</span>`;
@@ -220,21 +251,24 @@ async function refreshStats() {
   }
 }
 
-function showPanel(id) {
+function showPanel(id, { updateHash = true, replaceHash = false } = {}) {
+  const panel = VALID_PANELS.has(id) ? id : DEFAULT_PANEL;
   document.querySelectorAll('.dash-panel').forEach((p) => {
-    const on = p.dataset.panel === id;
+    const on = p.dataset.panel === panel;
     p.classList.toggle('on', on);
     p.hidden = !on;
   });
   document.querySelectorAll('.dash-ni[data-panel]').forEach((n) => {
-    n.classList.toggle('on', n.dataset.panel === id);
+    n.classList.toggle('on', n.dataset.panel === panel);
   });
-  if (el.panelTitle) el.panelTitle.textContent = PANEL_TITLES[id] || id;
+  if (el.panelTitle) el.panelTitle.textContent = PANEL_TITLES[panel] || panel;
+  document.title = `XZENZY — ${PANEL_TITLES[panel] || 'Member'}`;
+  if (updateHash) syncHash(panel, replaceHash);
 
-  if (id === 'network') renderNetwork();
-  if (id === 'leaderboard') renderLeaderboard();
-  if (id === 'profile') renderProfile();
-  if (id === 'kyc') renderKyc();
+  if (panel === 'network') renderNetwork();
+  if (panel === 'leaderboard') renderLeaderboard();
+  if (panel === 'profile') renderProfile();
+  if (panel === 'kyc') renderKyc();
 }
 
 async function renderNetwork() {
@@ -454,9 +488,13 @@ function bindForms() {
 }
 
 function bindNav() {
-  document.querySelectorAll('.dash-ni[data-panel]').forEach((btn) => {
-    btn.addEventListener('click', () => showPanel(btn.dataset.panel));
+  document.querySelectorAll('.dash-ni[data-panel]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      showPanel(link.dataset.panel);
+    });
   });
+  window.addEventListener('popstate', () => showPanel(panelFromHash(), { updateHash: false }));
   document.querySelectorAll('[data-goto]').forEach((btn) => {
     btn.addEventListener('click', () => showPanel(btn.dataset.goto));
   });
@@ -477,10 +515,6 @@ async function boot() {
   if (!session) {
     window.location.replace('index.html');
     return;
-  }
-
-  if (window.location.hash) {
-    history.replaceState(null, '', window.location.pathname + window.location.search);
   }
 
   onAuthStateChange((s) => {
@@ -510,6 +544,8 @@ async function boot() {
     fillHeader();
     showToast('Run schema-member.sql in Supabase for full wallet features.', true);
   }
+
+  showPanel(panelFromHash(), { replaceHash: true });
 }
 
 boot();

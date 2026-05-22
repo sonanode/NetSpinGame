@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="css/theme.css?v=6" />
   <link rel="stylesheet" href="css/style.css?v=7" />
-  <link rel="stylesheet" href="css/dashboard.css?v=5" />
+  <link rel="stylesheet" href="css/dashboard.css?v=6" />
 </head>
 <body>
   <div class="vegas-bg"></div>
@@ -45,28 +45,29 @@
       <aside class="dash-sb" aria-label="Member navigation">
         <nav class="dash-nav">
           <div class="dash-ns">Main</div>
-          <button type="button" class="dash-ni on" data-panel="dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
-          <button type="button" class="dash-ni" data-panel="network"><i class="ti ti-sitemap"></i> My Network</button>
-          <button type="button" class="dash-ni" data-panel="invite"><i class="ti ti-user-plus"></i> Invite Member</button>
+          <a href="#dashboard" class="dash-ni on" data-panel="dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+          <a href="#network" class="dash-ni" data-panel="network"><i class="ti ti-sitemap"></i> My Network</a>
+          <a href="#invite" class="dash-ni" data-panel="invite"><i class="ti ti-user-plus"></i> Invite Member</a>
 
           <div class="dash-ns">Wallet</div>
-          <button type="button" class="dash-ni" data-panel="deposit"><i class="ti ti-arrow-bar-to-down"></i> Deposit (Crypto)</button>
-          <button type="button" class="dash-ni" data-panel="transfer-bal"><i class="ti ti-arrow-right-circle"></i> Transfer Balance</button>
-          <button type="button" class="dash-ni" data-panel="transfer-cr"><i class="ti ti-transfer"></i> Transfer Credits</button>
-          <button type="button" class="dash-ni" data-panel="withdraw"><i class="ti ti-arrow-bar-up"></i> Withdraw</button>
+          <a href="#deposit" class="dash-ni" data-panel="deposit"><i class="ti ti-arrow-bar-to-down"></i> Deposit (Crypto)</a>
+          <a href="#transfer-bal" class="dash-ni" data-panel="transfer-bal"><i class="ti ti-arrow-right-circle"></i> Transfer Balance</a>
+          <a href="#transfer-cr" class="dash-ni" data-panel="transfer-cr"><i class="ti ti-transfer"></i> Transfer Credits</a>
+          <a href="#withdraw" class="dash-ni" data-panel="withdraw"><i class="ti ti-arrow-bar-up"></i> Withdraw</a>
 
           <div class="dash-ns">Credits &amp; Game</div>
-          <button type="button" class="dash-ni" data-panel="buy"><i class="ti ti-coins"></i> Buy Credits</button>
+          <a href="#buy" class="dash-ni" data-panel="buy"><i class="ti ti-coins"></i> Buy Credits</a>
           <a href="game.html" class="dash-ni dash-ni-link"><i class="ti ti-device-gamepad-2"></i> Play Game</a>
-          <button type="button" class="dash-ni" data-panel="leaderboard"><i class="ti ti-trophy"></i> Leaderboard</button>
+          <a href="#leaderboard" class="dash-ni" data-panel="leaderboard"><i class="ti ti-trophy"></i> Leaderboard</a>
 
           <div class="dash-ns">Commission</div>
-          <button type="button" class="dash-ni" data-panel="commission"><i class="ti ti-report-money"></i> Commission</button>
+          <a href="#commission" class="dash-ni" data-panel="commission"><i class="ti ti-report-money"></i> Commission</a>
 
           <div class="dash-ns">Account</div>
-          <button type="button" class="dash-ni" data-panel="profile"><i class="ti ti-user-circle"></i> Profile</button>
-          <button type="button" class="dash-ni" data-panel="kyc"><i class="ti ti-shield-check"></i> KYC / Security</button>
-          <button type="button" class="dash-ni" data-panel="settings"><i class="ti ti-settings"></i> Settings</button>
+          <a href="#profile" class="dash-ni" data-panel="profile"><i class="ti ti-user-circle"></i> Profile</a>
+          <a href="#kyc" class="dash-ni" data-panel="kyc"><i class="ti ti-shield-check"></i> KYC / Security</a>
+          <a href="#settings" class="dash-ni" data-panel="settings"><i class="ti ti-settings"></i> Settings</a>
+          <a href="admin.html" class="dash-ni dash-ni-link dash-ni-admin" id="navAdmin" hidden><i class="ti ti-shield-lock"></i> Admin</a>
           <button type="button" class="dash-ni" id="btnSignOut"><i class="ti ti-logout"></i> Sign Out</button>
         </nav>
       </aside>
@@ -288,6 +289,6 @@
 
   <script src="js/guard.js"></script>
   <script src="js/auth-callback.js"></script>
-  <script type="module" src="js/dashboard.js?v=2"></script>
+  <script type="module" src="js/dashboard.js?v=3"></script>
 </body>
 </html>

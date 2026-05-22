@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>XZENZY — Admin</title>
+  <link rel="icon" href="logo-x.svg?v=3" type="image/svg+xml" sizes="any" />
+  <link rel="icon" href="favicon.svg?v=5" type="image/svg+xml" sizes="32x32" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/theme.css?v=6" />
+  <link rel="stylesheet" href="css/dashboard.css?v=6" />
+  <link rel="stylesheet" href="css/admin.css?v=1" />
+</head>
+<body class="admin-body">
+  <div class="vegas-bg"></div>
+
+  <div class="dash-page">
+    <div class="dash-wrap admin-wrap">
+      <div class="dash-logo-area admin-logo-area">
+        <div class="dash-logo-row">
+          <span class="brand-logo-orbit sm" aria-hidden="true">
+            <img src="logo-x.svg?v=3" class="brand-logo-svg" width="32" height="32" alt="" />
+          </span>
+          <div>
+            <div class="dash-logo-name">XZENZY</div>
+            <div class="dash-logo-tag admin-tag">Admin console</div>
+          </div>
+        </div>
+      </div>
+
+      <header class="dash-topbar admin-topbar">
+        <div class="dash-pt" id="adminPanelTitle">Overview</div>
+        <div class="dash-tr">
+          <a href="dashboard.html" class="admin-link-member"><i class="ti ti-arrow-left"></i> Member portal</a>
+          <span class="admin-user-email" id="adminEmail">—</span>
+        </div>
+      </header>
+
+      <aside class="dash-sb admin-sb" aria-label="Admin navigation">
+        <nav class="dash-nav">
+          <div class="dash-ns">Control</div>
+          <a href="#overview" class="dash-ni on" data-panel="overview"><i class="ti ti-chart-bar"></i> Overview</a>
+          <a href="#members" class="dash-ni" data-panel="members"><i class="ti ti-users"></i> Members</a>
+          <a href="#pending" class="dash-ni" data-panel="pending"><i class="ti ti-clock-exclamation"></i> Pending <span class="admin-badge" id="pendingBadge" hidden>0</span></a>
+          <a href="#ledger" class="dash-ni" data-panel="ledger"><i class="ti ti-list-details"></i> Ledger</a>
+          <a href="#staff" class="dash-ni" data-panel="staff"><i class="ti ti-shield-lock"></i> Staff access</a>
+          <button type="button" class="dash-ni" id="btnAdminSignOut"><i class="ti ti-logout"></i> Sign Out</button>
+        </nav>
+      </aside>
+
+      <div class="dash-main">
+        <div class="dash-content">
+          <section class="dash-panel on" data-panel="overview">
+            <div class="dash-stats-grid admin-stats">
+              <div class="dash-stat dash-stat-1">
+                <div class="dash-stat-border"></div>
+                <div class="dash-stat-lbl"><i class="ti ti-users"></i> Members</div>
+                <div class="dash-stat-val" id="statMembers">0</div>
+              </div>
+              <div class="dash-stat dash-stat-4">
+                <div class="dash-stat-border"></div>
+                <div class="dash-stat-lbl"><i class="ti ti-clock"></i> Pending</div>
+                <div class="dash-stat-val" id="statPending">0</div>
+              </div>
+              <div class="dash-stat dash-stat-2">
+                <div class="dash-stat-border"></div>
+                <div class="dash-stat-lbl"><i class="ti ti-wallet"></i> Total USDT</div>
+                <div class="dash-stat-val" id="statWalletTotal">0</div>
+              </div>
+              <div class="dash-stat dash-stat-3">
+                <div class="dash-stat-border"></div>
+                <div class="dash-stat-lbl"><i class="ti ti-stars"></i> Total credits</div>
+                <div class="dash-stat-val" id="statCreditsTotal">0</div>
+              </div>
+            </div>
+            <div class="dash-notif info">
+              <i class="ti ti-info-circle"></i>
+              <span>Approve large deposits (&gt;500 USDT) and review withdrawals under <strong>Pending</strong>. Member actions use the same <code>member_ledger</code> table.</span>
+            </div>
+          </section>
+
+          <section class="dash-panel" data-panel="members" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-search"></i> Search members</div>
+              <form id="formMemberSearch" class="dash-form admin-search-form">
+                <input id="memberSearch" class="dash-input" type="search" placeholder="Email, name, or XZ code" />
+                <button type="submit" class="dash-btn-a dash-btn-pri">Search</button>
+              </form>
+              <div id="membersTable" class="dash-table-wrap"></div>
+            </div>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-adjustments"></i> Adjust member balance</div>
+              <form id="formAdjust" class="dash-form">
+                <label class="dash-label" for="adjCode">Member code (XZ…)</label>
+                <input id="adjCode" class="dash-input" required placeholder="XZ7118067D" />
+                <label class="dash-label" for="adjType">Type</label>
+                <select id="adjType" class="dash-input">
+                  <option value="wallet">USDT wallet (+/−)</option>
+                  <option value="credits">Game credits (+/−)</option>
+                </select>
+                <label class="dash-label" for="adjAmount">Amount (+ credit, − debit)</label>
+                <input id="adjAmount" class="dash-input" type="number" step="0.01" required />
+                <label class="dash-label" for="adjNote">Note</label>
+                <input id="adjNote" class="dash-input" maxlength="120" placeholder="Reason for adjustment" />
+                <button type="submit" class="dash-btn-a dash-btn-pri">Apply adjustment</button>
+              </form>
+            </div>
+          </section>
+
+          <section class="dash-panel" data-panel="pending" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-clock-exclamation"></i> Pending transactions</div>
+              <p class="dash-hint">Deposits over 500 USDT and all withdrawal requests. <strong>Approve</strong> to complete; <strong>Reject</strong> refunds wallet on withdrawals.</p>
+              <div id="pendingTable" class="dash-table-wrap"></div>
+            </div>
+          </section>
+
+          <section class="dash-panel" data-panel="ledger" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-list-details"></i> Global ledger (latest)</div>
+              <div id="ledgerTable" class="dash-table-wrap"></div>
+            </div>
+          </section>
+
+          <section class="dash-panel" data-panel="staff" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-shield-lock"></i> Grant / revoke admin</div>
+              <p class="dash-hint">Admins can access this console and approve pending ledger items. Run SQL once to promote your first admin (see SETUP-ADMIN-TH.md).</p>
+              <form id="formStaff" class="dash-form">
+                <label class="dash-label" for="staffCode">Member code (XZ…)</label>
+                <input id="staffCode" class="dash-input" required />
+                <label class="dash-check">
+                  <input type="checkbox" id="staffGrant" checked />
+                  <span>Grant admin access</span>
+                </label>
+                <button type="submit" class="dash-btn-a dash-btn-pri">Update staff flag</button>
+              </form>
+            </div>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-badge"></i> Set member rank</div>
+              <form id="formRank" class="dash-form">
+                <label class="dash-label" for="rankCode">Member code</label>
+                <input id="rankCode" class="dash-input" required />
+                <label class="dash-label" for="rankVal">Rank</label>
+                <select id="rankVal" class="dash-input">
+                  <option value="member">member</option>
+                  <option value="vip">vip</option>
+                  <option value="agent">agent</option>
+                  <option value="admin">admin</option>
+                </select>
+                <button type="submit" class="dash-btn-a dash-btn-sec">Save rank</button>
+              </form>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="adminToast" class="dash-toast" role="status"></div>
+
+  <script src="js/guard.js"></script>
+  <script src="js/auth-callback.js"></script>
+  <script type="module" src="js/admin.js?v=1"></script>
+</body>
+</html>
