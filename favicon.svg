@@ -1,33 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="XZENZY">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="XZENZY">
   <defs>
-    <linearGradient id="neon" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff3dff"/>
-      <stop offset="45%" stop-color="#00f0ff"/>
+    <linearGradient id="goldPink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff8e1"/>
+      <stop offset="25%" stop-color="#ffd54f"/>
+      <stop offset="50%" stop-color="#ff8f00"/>
+      <stop offset="72%" stop-color="#ff3dff"/>
       <stop offset="100%" stop-color="#ff9af0"/>
     </linearGradient>
-    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="2" result="b"/>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="0.8" result="blur"/>
       <feMerge>
-        <feMergeNode in="b"/>
+        <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
   </defs>
-  <g filter="url(#glow)" transform-origin="32 34">
+  <g filter="url(#glow)" transform-origin="16 16.5">
     <text
-      x="32"
-      y="44"
+      x="16"
+      y="27"
       font-family="'Noto Serif Thai', Georgia, 'Times New Roman', serif"
-      font-size="40"
+      font-size="30"
       font-weight="700"
       text-anchor="middle"
-      fill="url(#neon)">X</text>
+      dominant-baseline="auto"
+      fill="url(#goldPink)">X</text>
     <animateTransform
       attributeName="transform"
       type="rotate"
-      from="0 32 34"
-      to="360 32 34"
-      dur="4s"
+      from="0 16 16.5"
+      to="360 16 16.5"
+      dur="5s"
       repeatCount="indefinite"/>
   </g>
 </svg>
