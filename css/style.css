@@ -339,6 +339,11 @@ html, body {
   animation: spin-glow 1.5s ease-in-out infinite alternate;
 }
 
+.btn.spin-main.is-busy {
+  cursor: wait;
+  filter: brightness(0.92);
+}
+
 @keyframes spin-glow {
   from { box-shadow: 0 0 16px rgba(255, 61, 255, 0.4); }
   to { box-shadow: 0 0 32px rgba(255, 61, 255, 0.75); }

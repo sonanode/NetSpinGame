@@ -126,14 +126,15 @@ function updateHud() {
       : state.lastResult?.effectiveMult > 1
         ? `×${state.lastResult.effectiveMult}`
         : '×1';
-  if (state.spinning) {
-    el.spinBtn.textContent = state.autoSpin ? 'STOP' : '...';
+  if (state.autoSpin && state.spinning) {
+    el.spinBtn.textContent = 'STOP';
   } else if (state.freeSpinsLeft > 0) {
     el.spinBtn.textContent = 'FREE SPIN';
   } else {
     el.spinBtn.textContent = 'SPIN';
   }
   el.spinBtn.disabled = false;
+  el.spinBtn.classList.toggle('is-busy', state.spinning);
   el.spinBtn.setAttribute('aria-busy', state.spinning ? 'true' : 'false');
   const lock = state.spinning || state.freeSpinsLeft > 0;
   el.betDown.disabled = lock;
@@ -292,18 +293,27 @@ function animateReels(finalGrid) {
       resolve();
       return;
     }
-    const speed = state.autoSpin ? SPIN_TIMING.autoFactor : 1;
-    const maxStopMs = Math.round(
-      (SPIN_TIMING.firstReelMs +
-        (cols.length - 1) * SPIN_TIMING.staggerPerReelMs +
-        SPIN_TIMING.postStopPauseMs) *
-        speed
-    );
-    const safety = setTimeout(resolve, maxStopMs + 800);
-    const done = () => {
-      clearTimeout(safety);
+
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      cols.forEach((c) => c.classList.remove('spinning'));
+      try {
+        audio.stopSpinLoop();
+      } catch (_) {}
       resolve();
     };
+
+    const speed = state.autoSpin ? SPIN_TIMING.autoFactor : 1;
+    const maxMs =
+      Math.round(
+        (SPIN_TIMING.firstReelMs +
+          (cols.length - 1) * SPIN_TIMING.staggerPerReelMs +
+          SPIN_TIMING.postStopPauseMs) *
+          speed
+      ) + 600;
+    const hardCap = setTimeout(finish, maxMs);
 
     try {
       audio.startSpinLoop();
@@ -317,8 +327,7 @@ function animateReels(finalGrid) {
       const tick = setInterval(() => {
         for (let r = 0; r < ROWS; r++) {
           const cell = col.querySelector(`.cell[data-row="${r}"]`);
-          const sym = Math.floor(Math.random() * SYMBOLS.length);
-          setCellImage(cell, sym, true);
+          setCellImage(cell, Math.floor(Math.random() * SYMBOLS.length), true);
         }
       }, SPIN_TIMING.frameIntervalMs);
 
@@ -332,12 +341,12 @@ function animateReels(finalGrid) {
             false
           );
         }
-        audio.playReelStop(ci);
+        try {
+          audio.playReelStop(ci);
+        } catch (_) {}
         if (ci === cols.length - 1) {
-          try {
-            audio.stopSpinLoop();
-          } catch (_) {}
-          setTimeout(done, SPIN_TIMING.postStopPauseMs);
+          clearTimeout(hardCap);
+          setTimeout(finish, SPIN_TIMING.postStopPauseMs);
         }
       }, stopMs);
     });
@@ -464,6 +473,7 @@ async function doSpin() {
   } finally {
     state.spinning = false;
     updateHud();
+    requestAnimationFrame(() => updateHud());
   }
 
   if (state.autoSpin && (state.autoRemaining > 0 || state.autoRemaining === -1)) {
@@ -496,11 +506,15 @@ function bindEvents() {
   el.spinBtn.onclick = () => {
     if (state.autoSpin) {
       state.autoSpin = false;
+      state.spinning = false;
       updateHud();
       return;
     }
-    if (state.spinning) return;
-    doSpin();
+    if (state.spinning) {
+      state.spinning = false;
+      updateHud();
+    }
+    void doSpin();
   };
 
   el.betDown.onclick = async () => {
