@@ -13,26 +13,36 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="css/theme.css?v=6" />
   <link rel="stylesheet" href="css/style.css?v=7" />
-  <link rel="stylesheet" href="css/dashboard.css?v=4" />
+  <link rel="stylesheet" href="css/dashboard.css?v=5" />
 </head>
 <body>
   <div class="vegas-bg"></div>
 
   <div class="dash-page">
     <div class="dash-wrap">
-      <aside class="dash-sb" aria-label="Member navigation">
-        <div class="dash-logo-area">
-          <div class="dash-logo-row">
-            <span class="brand-logo-orbit sm" aria-hidden="true">
-              <img src="logo-x.svg?v=3" class="brand-logo-svg" width="32" height="32" alt="" />
-            </span>
-            <div>
-              <div class="dash-logo-name">XZENZY</div>
-              <div class="dash-logo-tag">Member portal</div>
-            </div>
+      <div class="dash-logo-area">
+        <div class="dash-logo-row">
+          <span class="brand-logo-orbit sm" aria-hidden="true">
+            <img src="logo-x.svg?v=3" class="brand-logo-svg" width="32" height="32" alt="" />
+          </span>
+          <div>
+            <div class="dash-logo-name">XZENZY</div>
+            <div class="dash-logo-tag">Member portal</div>
           </div>
         </div>
+      </div>
 
+      <header class="dash-topbar">
+        <div class="dash-pt" id="panelTitle">Dashboard</div>
+        <div class="dash-tr">
+          <span class="dash-meta-id">ID <span id="memberId">—</span></span>
+          <span class="dash-badge-rank" id="memberRank">MEMBER</span>
+          <span class="dash-meta-ref">Ref: <span id="memberRef">—</span></span>
+          <div class="dash-av" id="memberAvatar" title="">—</div>
+        </div>
+      </header>
+
+      <aside class="dash-sb" aria-label="Member navigation">
         <nav class="dash-nav">
           <div class="dash-ns">Main</div>
           <button type="button" class="dash-ni on" data-panel="dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
@@ -62,16 +72,6 @@
       </aside>
 
       <div class="dash-main">
-        <header class="dash-topbar">
-          <div class="dash-pt" id="panelTitle">Dashboard</div>
-          <div class="dash-tr">
-            <span class="dash-meta-id">ID <span id="memberId">—</span></span>
-            <span class="dash-badge-rank" id="memberRank">MEMBER</span>
-            <span class="dash-meta-ref">Ref: <span id="memberRef">—</span></span>
-            <div class="dash-av" id="memberAvatar" title="">—</div>
-          </div>
-        </header>
-
         <div class="dash-content">
           <!-- Dashboard home -->
           <section class="dash-panel on" data-panel="dashboard">
