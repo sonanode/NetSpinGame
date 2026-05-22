@@ -1,6 +1,13 @@
 # XZENZY — ตั้งค่าระบบแอดมิน (ภาษาไทย)
 
-ระบบแอดมินใช้ **บัญชีสมาชิกเดียวกัน** (Supabase Auth + `profiles`) แต่มีคอลัมน์ `is_admin` และหน้า `admin.html`
+แอดมิน **เข้าแยกจากสมาชิก** — ไม่มีลิงก์ในแดชบอร์ดสมาชิก
+
+| ระบบ | หน้า login | หลัง login |
+|------|------------|------------|
+| สมาชิก | `index.html` | `dashboard.html` |
+| แอดมิน | **`admin-login.html`** | `admin.html` |
+
+ใช้ Supabase Auth + `profiles.is_admin` (บัญชี staff ต้องถูกตั้ง `is_admin = true`)
 
 ## 1. รัน SQL ใน Supabase
 
@@ -23,12 +30,16 @@ where email = 'your-email@gmail.com';
 
 ## 3. เปิดใช้งาน
 
-| หน้า | URL |
+| ระบบ | URL |
 |------|-----|
-| สมาชิก | `dashboard.html#deposit` (แต่ละเมนูมีลิงก์ `#ชื่อแผง`) |
-| แอดมิน | `admin.html` |
+| สมาชิก login | `https://www.xzenzy.com/` หรือ `index.html` |
+| **แอดมิน login** | **`https://www.xzenzy.com/admin-login.html`** |
+| แอดมินหลัง login | `admin.html#overview` |
 
-ผู้ที่ `is_admin = true` จะเห็นเมนู **Admin** ในแดชบอร์ดสมาชิก
+ใน Supabase → **Authentication → URL Configuration** เพิ่ม Redirect URL:
+
+- `https://www.xzenzy.com/admin.html`
+- `https://www.xzenzy.com/admin-login.html` (ถ้าใช้ OAuth จากหน้า login แอดมิน)
 
 ## 4. ฟีเจอร์แอดมิน
 

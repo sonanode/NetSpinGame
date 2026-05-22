@@ -1,0 +1,127 @@
+import {
+  getConfigError,
+  getSession,
+  isConfigured,
+  onAuthStateChange,
+  signIn,
+  signInWithProvider,
+  signOut,
+} from './auth.js';
+import { checkIsAdmin } from './admin-api.js';
+import { saveAnonKeyAndConnect } from './supabase-client.js';
+
+const LOGIN_URL = 'admin-login.html';
+const CONSOLE_URL = 'admin.html';
+
+const el = {
+  formSignIn: document.getElementById('formSignIn'),
+  msg: document.getElementById('authMsg'),
+  keySetup: document.getElementById('keySetup'),
+  authMain: document.getElementById('authMain'),
+  anonKeyInput: document.getElementById('anonKeyInput'),
+  saveKeyBtn: document.getElementById('saveKeyBtn'),
+  btnSignOutOther: document.getElementById('btnSignOutOther'),
+};
+
+function showMsg(text, type = 'info') {
+  el.msg.textContent = text;
+  el.msg.className = `auth-msg ${type}`;
+  el.msg.hidden = !text;
+}
+
+function goConsole() {
+  const dest = new URL(CONSOLE_URL, window.location.href);
+  dest.hash = window.location.hash.replace(/^#/, '') ? window.location.hash : '#overview';
+  window.location.replace(dest.href);
+}
+
+async function verifyAdminOrFail(session) {
+  if (!session) return false;
+  try {
+    const ok = await checkIsAdmin();
+    if (ok) return true;
+    showMsg(
+      'This account is not an administrator. Ask a super admin to set is_admin in Supabase.',
+      'error'
+    );
+    el.btnSignOutOther.hidden = false;
+    return false;
+  } catch (err) {
+    showMsg(err.message || 'Run schema-admin.sql in Supabase first.', 'error');
+    el.btnSignOutOther.hidden = false;
+    return false;
+  }
+}
+
+async function afterAuth(session) {
+  if (await verifyAdminOrFail(session)) goConsole();
+}
+
+function bindAuthUi() {
+  document.getElementById('btnGoogle')?.addEventListener('click', async () => {
+    showMsg('Redirecting to Google…', 'info');
+    const { error } = await signInWithProvider('google', CONSOLE_URL);
+    if (error) showMsg(error.message, 'error');
+  });
+
+  el.formSignIn?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showMsg('Verifying staff access…', 'info');
+    const fd = new FormData(el.formSignIn);
+    const { error } = await signIn(fd.get('email'), fd.get('password'));
+    if (error) {
+      showMsg(error.message, 'error');
+      return;
+    }
+    const session = await getSession();
+    await afterAuth(session);
+  });
+
+  el.btnSignOutOther?.addEventListener('click', async () => {
+    await signOut();
+    el.btnSignOutOther.hidden = true;
+    showMsg('Signed out. Sign in with a staff account.', 'info');
+  });
+}
+
+function showKeySetup(show) {
+  if (el.keySetup) el.keySetup.hidden = !show;
+  if (el.authMain) el.authMain.hidden = show;
+}
+
+async function continueBoot() {
+  const session = await getSession();
+  if (session && isConfigured()) {
+    await afterAuth(session);
+    return;
+  }
+
+  onAuthStateChange((s) => {
+    if (s && isConfigured()) afterAuth(s);
+  });
+
+  bindAuthUi();
+}
+
+async function boot() {
+  const cfgErr = getConfigError();
+  if (cfgErr) {
+    showKeySetup(true);
+    el.saveKeyBtn?.addEventListener('click', () => {
+      const result = saveAnonKeyAndConnect(el.anonKeyInput?.value);
+      if (!result.ok) {
+        showMsg(result.message, 'error');
+        return;
+      }
+      showKeySetup(false);
+      showMsg('Connected. Staff sign in below.', 'success');
+      bindAuthUi();
+    });
+    return;
+  }
+
+  showKeySetup(false);
+  await continueBoot();
+}
+
+boot();

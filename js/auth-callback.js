@@ -1,9 +1,10 @@
 /**
- * OAuth / magic-link returns may land on index or game (old Supabase URLs).
- * Forward tokens to dashboard.html so post-login always goes there.
+ * OAuth / magic-link returns may land on index, game, or admin-login.
+ * Forward tokens to the correct app entry (member dashboard or admin console).
  */
 (function () {
-  if (/\/dashboard\.html$/i.test(window.location.pathname)) return;
+  const path = window.location.pathname;
+  if (/\/dashboard\.html$/i.test(path) || /\/admin\.html$/i.test(path)) return;
 
   const hash = window.location.hash || '';
   const search = window.location.search || '';
@@ -16,7 +17,8 @@
 
   if (!isAuthReturn) return;
 
-  const dest = new URL('dashboard.html', window.location.href);
+  const destFile = /admin-login\.html$/i.test(path) ? 'admin.html' : 'dashboard.html';
+  const dest = new URL(destFile, window.location.href);
   dest.hash = hash;
   dest.search = search;
   window.location.replace(dest.href);

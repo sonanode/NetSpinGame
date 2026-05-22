@@ -34,11 +34,11 @@ export async function signIn (email, password) {
   return sb.auth.signInWithPassword({ email, password });
 }
 
-export async function signInWithProvider (provider) {
+export async function signInWithProvider (provider, redirectPath = 'dashboard.html') {
   const err = getConfigError();
   if (err) return { error: { message: err } };
   const sb = getSupabase();
-  const redirectTo = new URL('dashboard.html', window.location.href).href;
+  const redirectTo = new URL(redirectPath, window.location.href).href;
   return sb.auth.signInWithOAuth({
     provider,
     options: { redirectTo },

@@ -296,32 +296,35 @@ function bindNav() {
   window.addEventListener('popstate', () => showPanel(panelFromHash(), { updateHash: false }));
   el.btnSignOut?.addEventListener('click', async () => {
     await signOut();
-    window.location.replace('index.html');
+    window.location.replace('admin-login.html');
   });
 }
+
+const ADMIN_LOGIN = 'admin-login.html';
 
 async function boot() {
   session = await requireSession();
   if (!session) {
-    window.location.replace('index.html');
+    window.location.replace(ADMIN_LOGIN);
     return;
   }
   el.email.textContent = session.user.email || 'Admin';
 
   onAuthStateChange((s) => {
-    if (!s) window.location.replace('index.html');
+    if (!s) window.location.replace(ADMIN_LOGIN);
   });
 
   try {
     const ok = await checkIsAdmin();
     if (!ok) {
-      showToast('Admin access required. Run schema-admin.sql and set is_admin.', true);
-      setTimeout(() => window.location.replace('dashboard.html'), 2200);
+      showToast('Not an administrator. Use admin-login with a staff account.', true);
+      await signOut();
+      setTimeout(() => window.location.replace(ADMIN_LOGIN), 1600);
       return;
     }
   } catch (err) {
     showToast(err.message || 'Run schema-admin.sql in Supabase', true);
-    setTimeout(() => window.location.replace('dashboard.html'), 2800);
+    setTimeout(() => window.location.replace(ADMIN_LOGIN), 2200);
     return;
   }
 

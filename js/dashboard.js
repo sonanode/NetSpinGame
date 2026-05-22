@@ -79,7 +79,6 @@ const el = {
   buyPreview: document.getElementById('buyPreview'),
   buyUsdt: document.getElementById('buyUsdt'),
   btnSignOut: document.getElementById('btnSignOut'),
-  navAdmin: document.getElementById('navAdmin'),
   toast: document.getElementById('dashToast'),
 };
 
@@ -215,8 +214,6 @@ function fillHeader() {
   el.memberAvatar.textContent = initials(name, email);
   el.memberAvatar.title = email;
   el.memberRank.textContent = (profile?.rank || 'MEMBER').toUpperCase();
-  if (el.navAdmin) el.navAdmin.hidden = !profile?.is_admin;
-
   el.statWallet.innerHTML = `${fmtUsdt(wallet)}<span class="dash-stat-unit">USDT</span>`;
   el.statCredits.innerHTML = `${fmt(profile?.balance ?? 0)}<span class="dash-stat-unit">Cr</span>`;
 

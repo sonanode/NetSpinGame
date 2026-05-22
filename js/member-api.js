@@ -10,7 +10,7 @@ export async function loadMemberProfile(userId) {
   const { data, error } = await sb
     .from('profiles')
     .select(
-      'email, display_name, balance, wallet_usdt, line_bet, active_lines, bet_mult, referrer_id, rank, is_admin, sound, free_spins_left, created_at, updated_at'
+      'email, display_name, balance, wallet_usdt, line_bet, active_lines, bet_mult, referrer_id, rank, sound, free_spins_left, created_at, updated_at'
     )
     .eq('id', userId)
     .maybeSingle();

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>XZENZY — Admin Sign in</title>
+  <link rel="icon" href="logo-x.svg?v=3" type="image/svg+xml" sizes="any" />
+  <link rel="icon" href="favicon.svg?v=5" type="image/svg+xml" sizes="32x32" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/theme.css?v=6" />
+  <link rel="stylesheet" href="css/auth.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/admin.css?v=2" />
+</head>
+<body class="admin-login-body">
+  <div class="vegas-bg"></div>
+
+  <main class="auth-page admin-login-page">
+    <header class="auth-hero brand-lockup admin-login-hero">
+      <span class="brand-logo-orbit" aria-hidden="true">
+        <img src="logo-x.svg?v=3" class="brand-logo-svg" width="48" height="48" alt="" />
+      </span>
+      <div>
+        <h1>XZENZY</h1>
+        <p class="auth-hero-sub admin-login-sub">Staff console — administrators only. Not the member portal.</p>
+      </div>
+    </header>
+
+    <div id="keySetup" class="auth-card key-setup admin-login-card" hidden>
+      <p class="auth-social-label">Connect Supabase (one time)</p>
+      <label for="anonKeyInput">API key</label>
+      <input id="anonKeyInput" type="password" class="auth-form" placeholder="eyJ... or sb_publishable_..." autocomplete="off" />
+      <button type="button" id="saveKeyBtn" class="auth-submit admin-login-submit">Save &amp; connect</button>
+    </div>
+
+    <div id="authMain" class="auth-card admin-login-card">
+      <p class="admin-login-badge"><i class="ti ti-shield-lock"></i> ADMIN ACCESS</p>
+
+      <div class="auth-social">
+        <button type="button" id="btnGoogle" class="auth-social-btn google">Sign in with Google</button>
+      </div>
+      <p class="auth-divider"><span>or staff email</span></p>
+
+      <form id="formSignIn" class="auth-form">
+        <label for="inEmail">Staff email</label>
+        <input id="inEmail" name="email" type="email" autocomplete="email" required />
+
+        <label for="inPassword">Password</label>
+        <input id="inPassword" name="password" type="password" autocomplete="current-password" required />
+
+        <button type="submit" class="auth-submit admin-login-submit">SIGN IN TO ADMIN</button>
+      </form>
+
+      <button type="button" id="btnSignOutOther" class="admin-login-signout" hidden>Sign out and use another account</button>
+    </div>
+
+    <p id="authMsg" class="auth-msg" hidden></p>
+
+    <footer class="auth-footer admin-login-footer">
+      <a href="index.html">Member sign in</a>
+      <span aria-hidden="true"> · </span>
+      <span>Authorized staff only</span>
+    </footer>
+  </main>
+
+  <script src="js/guard.js"></script>
+  <script src="js/auth-callback.js"></script>
+  <script type="module" src="js/admin-login.js"></script>
+</body>
+</html>

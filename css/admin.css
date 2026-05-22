@@ -1,4 +1,81 @@
 /* XZENZY admin — extends dashboard layout */
+
+/* Standalone staff login (admin-login.html) */
+.admin-login-body {
+  min-height: 100vh;
+}
+
+.admin-login-page .admin-login-hero h1 {
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(255, 213, 79, 0.45);
+}
+
+.admin-login-sub {
+  color: var(--gold) !important;
+  opacity: 0.85;
+}
+
+.admin-login-card {
+  border-color: rgba(255, 213, 79, 0.35);
+  box-shadow: 0 0 24px rgba(255, 213, 79, 0.12);
+}
+
+.admin-login-badge {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 14px;
+  font-weight: 800;
+}
+
+.admin-login-submit {
+  background: linear-gradient(135deg, #c9a227, var(--gold)) !important;
+  color: #1a0a04 !important;
+  border: 1px solid #ffe082 !important;
+}
+
+.admin-login-signout {
+  margin-top: 12px;
+  width: 100%;
+  padding: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+.admin-login-signout:hover {
+  color: var(--text);
+  border-color: var(--cyan);
+}
+
+.admin-login-footer a {
+  color: var(--cyan);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.admin-login-footer a:hover {
+  color: var(--text);
+}
+
+.admin-link-quiet {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.admin-link-quiet:hover {
+  color: var(--gold);
+}
+
 .admin-body .admin-tag {
   color: var(--gold);
 }
