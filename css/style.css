@@ -28,29 +28,45 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
   margin-bottom: 6px;
   flex-shrink: 0;
+  flex-wrap: nowrap;
+  min-height: 0;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 1;
+  min-width: 0;
+  justify-content: flex-end;
 }
 
 .brand-main {
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: 1.15rem;
+  font-size: 1rem;
+  line-height: 1.1;
   color: var(--pink);
-  text-shadow: 0 0 16px rgba(255, 61, 255, 0.7);
+  text-shadow: 0 0 12px rgba(255, 61, 255, 0.6);
   display: block;
 }
 
 .brand-sub {
-  font-size: 0.72rem;
+  font-size: 0.62rem;
+  line-height: 1.2;
   color: var(--cyan);
-  letter-spacing: 0.2em;
+  letter-spacing: 0.12em;
 }
 
 .brand-row {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  flex-shrink: 0;
+  min-width: 0;
 }
 
 .brand-row > div {

@@ -265,11 +265,25 @@
 }
 
 .top-bar .user-bar {
-  flex: 1;
+  flex: 0 1 auto;
   justify-content: flex-end;
   max-width: none;
+  flex-wrap: nowrap;
+  gap: 6px;
 }
 
 .top-bar .user-email {
-  max-width: 160px;
+  max-width: 120px;
+  font-size: 0.68rem;
+}
+
+.top-bar .btn.chip {
+  padding: 4px 8px;
+  font-size: 0.72rem;
+}
+
+.top-bar .sound-toggle {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  white-space: nowrap;
 }

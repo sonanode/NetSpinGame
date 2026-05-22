@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/theme.css?v=5" />
-  <link rel="stylesheet" href="css/style.css?v=6" />
+  <link rel="stylesheet" href="css/theme.css?v=6" />
+  <link rel="stylesheet" href="css/style.css?v=7" />
   <link rel="stylesheet" href="css/auth.css" />
 </head>
 <body>
@@ -20,22 +20,24 @@
     <header class="top-bar">
       <div class="brand brand-row">
         <span class="brand-logo-orbit sm" aria-hidden="true">
-          <img src="logo-x.svg?v=3" class="brand-logo-svg" width="52" height="52" alt="" />
+          <img src="logo-x.svg?v=3" class="brand-logo-svg" width="32" height="32" alt="" />
         </span>
         <div>
           <span class="brand-main">XZENZY</span>
           <span class="brand-sub">NEON VEGAS · 4×5 · 40 LINES</span>
         </div>
       </div>
-      <div class="user-bar">
-        <a href="dashboard.html" class="btn chip" style="text-decoration:none">Dashboard</a>
-        <span class="user-email" id="userLabel" title="">Player</span>
-        <button type="button" id="logoutBtn" class="btn chip">Log out</button>
+      <div class="top-bar-right">
+        <div class="user-bar">
+          <a href="dashboard.html" class="btn chip" style="text-decoration:none">Dashboard</a>
+          <span class="user-email" id="userLabel" title="">Player</span>
+          <button type="button" id="logoutBtn" class="btn chip">Log out</button>
+        </div>
+        <label class="sound-toggle">
+          <input type="checkbox" id="soundToggle" checked />
+          <span>Sound</span>
+        </label>
       </div>
-      <label class="sound-toggle">
-        <input type="checkbox" id="soundToggle" checked />
-        <span>Sound</span>
-      </label>
     </header>
 
     <section class="jackpots" aria-label="Progressive jackpots">
