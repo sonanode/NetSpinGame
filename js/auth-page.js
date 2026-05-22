@@ -69,7 +69,7 @@ async function boot () {
 async function continueBoot () {
   const session = await getSession();
   if (session && isConfigured()) {
-    window.location.replace('game.html');
+    window.location.replace('dashboard.html');
     return;
   }
 
@@ -100,7 +100,7 @@ function bindAuthUi () {
       showMsg(error.message, 'error');
       return;
     }
-    window.location.replace('game.html');
+    window.location.replace('dashboard.html');
   };
 
   el.formSignUp.onsubmit = async (e) => {
@@ -127,7 +127,7 @@ function bindAuthUi () {
       return;
     }
     if (data.session) {
-      window.location.replace('game.html');
+      window.location.replace('dashboard.html');
       return;
     }
     showMsg(

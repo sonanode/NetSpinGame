@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>NetSpin — Member Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <div class="vegas-bg"></div>
+
+  <div class="dash-page">
+    <div class="dash-wrap">
+      <aside class="dash-sb" aria-label="Member navigation">
+        <div class="dash-logo-area">
+          <div class="dash-logo-icon">N</div>
+          <div class="dash-logo-name">NetSpin</div>
+          <div class="dash-logo-tag">Member portal · Neon Vegas</div>
+        </div>
+
+        <div class="dash-ns">Main</div>
+        <a href="dashboard.html" class="dash-ni on" data-nav="dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+        <button type="button" class="dash-ni disabled" data-soon="network"><i class="ti ti-sitemap"></i> My Network <span class="dash-bx-soon">Soon</span></button>
+        <button type="button" class="dash-ni disabled" data-soon="invite"><i class="ti ti-user-plus"></i> Invite Member <span class="dash-bx-soon">Soon</span></button>
+
+        <div class="dash-ns">Wallet</div>
+        <button type="button" class="dash-ni disabled" data-soon="deposit"><i class="ti ti-arrow-bar-to-down"></i> Deposit (Crypto) <span class="dash-bx-soon">Soon</span></button>
+        <button type="button" class="dash-ni disabled" data-soon="transfer-bal"><i class="ti ti-arrow-right-circle"></i> Transfer Balance <span class="dash-bx2">P2P</span></button>
+        <button type="button" class="dash-ni disabled" data-soon="transfer-cr"><i class="ti ti-transfer"></i> Transfer Credits <span class="dash-bx2">P2P</span></button>
+        <button type="button" class="dash-ni disabled" data-soon="withdraw"><i class="ti ti-arrow-bar-up"></i> Withdraw <span class="dash-bx-soon">Soon</span></button>
+
+        <div class="dash-ns">Credits &amp; Game</div>
+        <button type="button" class="dash-ni disabled" data-soon="buy"><i class="ti ti-coins"></i> Buy Credits <span class="dash-bx-soon">Soon</span></button>
+        <a href="game.html" class="dash-ni" data-nav="game"><i class="ti ti-device-gamepad-2"></i> Play Game</a>
+        <button type="button" class="dash-ni disabled" data-soon="leaderboard"><i class="ti ti-trophy"></i> Leaderboard <span class="dash-bx-soon">Soon</span></button>
+
+        <div class="dash-ns">Commission</div>
+        <button type="button" class="dash-ni disabled" data-soon="direct"><i class="ti ti-cash"></i> Direct Bonus <span class="dash-bx-soon">Soon</span></button>
+        <button type="button" class="dash-ni disabled" data-soon="trinary"><i class="ti ti-chart-dots"></i> Trinary Bonus <span class="dash-bx-soon">Soon</span></button>
+        <button type="button" class="dash-ni disabled" data-soon="comm-hist"><i class="ti ti-report-money"></i> Commission History <span class="dash-bx-soon">Soon</span></button>
+
+        <div class="dash-ns">Account</div>
+        <button type="button" class="dash-ni" id="navProfile"><i class="ti ti-user-circle"></i> Profile</button>
+        <button type="button" class="dash-ni disabled" data-soon="kyc"><i class="ti ti-shield-check"></i> KYC / Security <span class="dash-bx-soon">Soon</span></button>
+        <button type="button" class="dash-ni disabled" data-soon="settings"><i class="ti ti-settings"></i> Settings <span class="dash-bx-soon">Soon</span></button>
+        <button type="button" class="dash-ni" id="btnSignOut"><i class="ti ti-logout"></i> Sign Out</button>
+      </aside>
+
+      <div class="dash-main">
+        <header class="dash-topbar">
+          <div class="dash-pt">Dashboard</div>
+          <div class="dash-tr">
+            <span class="dash-meta-id" style="font-size:11px;color:rgba(255,255,255,0.35)">ID <span id="memberId">—</span></span>
+            <span class="dash-badge-rank" id="memberRank">MEMBER</span>
+            <span style="font-size:11px;color:rgba(255,255,255,0.35)">Ref: <span id="memberRef" style="color:#a78bfa">—</span></span>
+            <div class="dash-av" id="memberAvatar" title="">—</div>
+          </div>
+        </header>
+
+        <div class="dash-content">
+          <div class="dash-notif info" id="welcomeNotif">
+            <i class="ti ti-sparkles" style="font-size:13px"></i>
+            <span>Welcome back, <strong id="welcomeName">Member</strong> — your member area is ready.</span>
+          </div>
+
+          <div class="dash-stats-grid">
+            <div class="dash-stat dash-stat-1">
+              <div class="dash-stat-border"></div>
+              <div class="dash-stat-lbl"><i class="ti ti-wallet" style="font-size:11px"></i> Wallet (USDT)</div>
+              <div class="dash-stat-val" id="statWallet">0<span class="dash-stat-unit">USDT</span></div>
+              <div class="dash-stat-sub">Deposit &amp; withdraw — coming soon</div>
+            </div>
+            <div class="dash-stat dash-stat-2">
+              <div class="dash-stat-border"></div>
+              <div class="dash-stat-lbl"><i class="ti ti-stars" style="font-size:11px"></i> Game credits</div>
+              <div class="dash-stat-val" id="statCredits">0<span class="dash-stat-unit">Cr</span></div>
+              <div class="dash-stat-sub">Neon Vegas slot balance</div>
+            </div>
+            <div class="dash-stat dash-stat-3">
+              <div class="dash-stat-border"></div>
+              <div class="dash-stat-lbl"><i class="ti ti-users" style="font-size:11px"></i> Network</div>
+              <div class="dash-stat-val" id="statNetwork">0<span class="dash-stat-unit">members</span></div>
+              <div class="dash-stat-sub">Trinary tree — coming soon</div>
+            </div>
+            <div class="dash-stat dash-stat-4">
+              <div class="dash-stat-border"></div>
+              <div class="dash-stat-lbl"><i class="ti ti-cash" style="font-size:11px"></i> Commission MTD</div>
+              <div class="dash-stat-val" id="statCommission">0<span class="dash-stat-unit">USDT</span></div>
+              <div class="dash-stat-sub">Direct + Trinary — coming soon</div>
+            </div>
+          </div>
+
+          <div class="dash-row2">
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-sitemap" style="color:#a78bfa"></i> Trinary network</div>
+              <div class="dash-tree-root">
+                <div class="dash-tb dash-tb-me" id="treeMe">You<div class="dash-tb-sub" id="treeMeSub">Member</div></div>
+                <div class="dash-lv"></div>
+                <div style="display:flex;gap:12px;position:relative">
+                  <div style="position:absolute;top:0;left:25px;right:25px" class="dash-lh"></div>
+                  <div style="display:flex;flex-direction:column;align-items:center">
+                    <div class="dash-lv"></div>
+                    <div class="dash-tb dash-tb-c">Leg A<div class="dash-tb-sub">Open</div></div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center">
+                    <div class="dash-lv"></div>
+                    <div class="dash-tb dash-tb-c">Leg B<div class="dash-tb-sub">Open</div></div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center">
+                    <div class="dash-lv"></div>
+                    <div class="dash-tb dash-tb-c">Leg C<div class="dash-tb-sub">Open</div></div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.4)">
+                <span>Member → Gold</span><span style="color:#a78bfa" id="rankProgress">0%</span>
+              </div>
+              <div class="dash-prog-bar"><div class="dash-prog-fill" id="rankProgressBar" style="width:0%"></div></div>
+              <p class="dash-empty" style="margin-top:10px">Full network view will appear after referral system is enabled.</p>
+            </div>
+
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-cash" style="color:#34d399"></i> Commission — latest</div>
+              <div id="commissionList" class="dash-empty">No commissions yet — invite members to earn (coming soon).</div>
+            </div>
+          </div>
+
+          <div class="dash-card dash-full-card">
+            <div class="dash-ct"><i class="ti ti-history" style="color:rgba(255,255,255,0.4)"></i> Recent activity</div>
+            <div id="txList"></div>
+          </div>
+
+          <div class="dash-btns-row">
+            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="deposit"><i class="ti ti-arrow-bar-to-down"></i> Deposit</button>
+            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="buy"><i class="ti ti-coins"></i> Buy credits</button>
+            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="transfer-bal"><i class="ti ti-arrow-right-circle"></i> Transfer balance</button>
+            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="transfer-cr"><i class="ti ti-transfer"></i> Transfer credits</button>
+            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="invite"><i class="ti ti-user-plus"></i> Invite</button>
+            <a href="game.html" class="dash-btn-a dash-btn-pri"><i class="ti ti-device-gamepad-2"></i> Play game</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashToast" class="dash-toast" role="status"></div>
+
+  <div id="profileModal" class="modal-overlay">
+    <div class="modal" style="max-width:400px">
+      <header class="modal-head">
+        <h2>Profile</h2>
+        <button type="button" id="profileClose" class="btn chip">×</button>
+      </header>
+      <div class="modal-body" id="profileBody" style="font-size:13px;line-height:1.6"></div>
+    </div>
+  </div>
+
+  <script src="js/guard.js"></script>
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

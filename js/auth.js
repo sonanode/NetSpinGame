@@ -21,7 +21,7 @@ export async function signUp (email, password, displayName) {
     password,
     options: {
       data: { display_name: displayName || email.split('@')[0] },
-      emailRedirectTo: `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}game.html`,
+      emailRedirectTo: `${window.location.origin}${window.location.pathname.replace(/index\.html$/, '')}dashboard.html`,
     },
   });
   return { data, error };
@@ -39,7 +39,7 @@ export async function signInWithProvider (provider) {
   if (err) return { error: { message: err } };
   const sb = getSupabase();
   const base = window.location.pathname.replace(/\/[^/]*$/, '/');
-  const redirectTo = `${window.location.origin}${base}game.html`;
+  const redirectTo = `${window.location.origin}${base}dashboard.html`;
   return sb.auth.signInWithOAuth({
     provider,
     options: { redirectTo },

@@ -594,6 +594,10 @@ async function boot() {
     window.location.replace('index.html');
   });
 
+  document.querySelector('a[href="dashboard.html"]')?.addEventListener('click', () => {
+    playerStore.flushSaveNow(state);
+  });
+
   loadPrefs();
   try {
     await playerStore.loadProfile(state);
