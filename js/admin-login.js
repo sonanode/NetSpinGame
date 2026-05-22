@@ -10,8 +10,28 @@ import {
 import { checkIsAdmin } from './admin-api.js';
 import { saveAnonKeyAndConnect } from './supabase-client.js';
 
-const LOGIN_URL = 'admin-login.html';
 const CONSOLE_URL = 'admin.html';
+const STAFF_EMAIL_HINT = 'team.sonanode@gmail.com';
+
+function hasAuthTokensInUrl() {
+  const h = window.location.hash || '';
+  const s = window.location.search || '';
+  return (
+    h.includes('access_token') ||
+    h.includes('code=') ||
+    s.includes('code=')
+  );
+}
+
+async function waitForSession(maxMs = 5000) {
+  const deadline = Date.now() + maxMs;
+  while (Date.now() < deadline) {
+    const s = await getSession();
+    if (s) return s;
+    await new Promise((r) => setTimeout(r, 80));
+  }
+  return null;
+}
 
 const el = {
   formSignIn: document.getElementById('formSignIn'),
@@ -40,8 +60,9 @@ async function verifyAdminOrFail(session) {
   try {
     const ok = await checkIsAdmin();
     if (ok) return true;
+    const email = session?.user?.email || '';
     showMsg(
-      'This account is not an administrator. Ask a super admin to set is_admin in Supabase.',
+      `Account ${email || '(unknown)'} is not an administrator. In Supabase run seed-admin-team-sonanode.sql for staff Google ${STAFF_EMAIL_HINT}.`,
       'error'
     );
     el.btnSignOutOther.hidden = false;
@@ -59,8 +80,8 @@ async function afterAuth(session) {
 
 function bindAuthUi() {
   document.getElementById('btnGoogle')?.addEventListener('click', async () => {
-    showMsg('Redirecting to Google…', 'info');
-    const { error } = await signInWithProvider('google', CONSOLE_URL);
+    showMsg(`Use Google account ${STAFF_EMAIL_HINT}`, 'info');
+    const { error } = await signInWithProvider('google', 'admin-login.html');
     if (error) showMsg(error.message, 'error');
   });
 
@@ -90,6 +111,15 @@ function showKeySetup(show) {
 }
 
 async function continueBoot() {
+  if (hasAuthTokensInUrl()) {
+    showMsg('Completing Google sign-in…', 'info');
+    const session = await waitForSession();
+    if (session) {
+      await afterAuth(session);
+      return;
+    }
+  }
+
   const session = await getSession();
   if (session && isConfigured()) {
     await afterAuth(session);

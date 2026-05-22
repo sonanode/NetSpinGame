@@ -17,8 +17,10 @@
 
   if (!isAuthReturn) return;
 
-  const destFile = /admin-login\.html$/i.test(path) ? 'admin.html' : 'dashboard.html';
-  const dest = new URL(destFile, window.location.href);
+  /* admin-login.html: stay here so admin-login.js checks is_admin before admin.html */
+  if (/admin-login\.html$/i.test(path)) return;
+
+  const dest = new URL('dashboard.html', window.location.href);
   dest.hash = hash;
   dest.search = search;
   window.location.replace(dest.href);

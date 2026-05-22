@@ -20,13 +20,24 @@
 
 ## 2. ตั้งแอดมินคนแรก
 
-ใน **SQL Editor** (แทนที่อีเมลด้วยอีเมลของคุณ):
+**แอดมินหลักโปรเจกต์:** `team.sonanode@gmail.com`
+
+ใน **SQL Editor** รันไฟล์:
+
+`supabase/seed-admin-team-sonanode.sql`
+
+หรือวางคำสั่งนี้:
 
 ```sql
 update public.profiles
 set is_admin = true, rank = 'admin'
-where email = 'your-email@gmail.com';
+where lower(email) = lower('team.sonanode@gmail.com');
+
+select email, is_admin, rank from public.profiles
+where lower(email) = lower('team.sonanode@gmail.com');
 ```
+
+ต้องได้ **1 แถว** และ `is_admin = true` — ถ้าได้ 0 แถว ให้สมัครบัญชีนี้ที่ `index.html` ก่อน แล้วรัน SQL อีกครั้ง
 
 ## 3. เปิดใช้งาน
 
@@ -38,8 +49,15 @@ where email = 'your-email@gmail.com';
 
 ใน Supabase → **Authentication → URL Configuration** เพิ่ม Redirect URL:
 
+- `https://www.xzenzy.com/admin-login.html`
 - `https://www.xzenzy.com/admin.html`
-- `https://www.xzenzy.com/admin-login.html` (ถ้าใช้ OAuth จากหน้า login แอดมิน)
+- `http://localhost:5500/admin-login.html` (ถ้าทดสอบ local)
+
+### Login ด้วย Google (แอดมินหลัก)
+
+1. รัน `seed-admin-team-sonanode.sql` **หลัง** Sign in with Google ครั้งแรกด้วย `team.sonanode@gmail.com`
+2. เปิด `admin-login.html` → **Sign in with Google** → เลือกบัญชี **team.sonanode@gmail.com**
+3. ถ้ายังขึ้น not administrator → รัน seed SQL อีกครั้ง แล้ว Sign out → login Google ใหม่
 
 ## 4. ฟีเจอร์แอดมิน
 

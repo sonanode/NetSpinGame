@@ -302,8 +302,24 @@ function bindNav() {
 
 const ADMIN_LOGIN = 'admin-login.html';
 
+function hasAuthTokensInUrl() {
+  const h = window.location.hash || '';
+  const s = window.location.search || '';
+  return h.includes('access_token') || h.includes('code=') || s.includes('code=');
+}
+
+async function waitForSession(maxMs = 5000) {
+  const deadline = Date.now() + maxMs;
+  while (Date.now() < deadline) {
+    const s = await requireSession();
+    if (s) return s;
+    await new Promise((r) => setTimeout(r, 80));
+  }
+  return null;
+}
+
 async function boot() {
-  session = await requireSession();
+  session = hasAuthTokensInUrl() ? await waitForSession() : await requireSession();
   if (!session) {
     window.location.replace(ADMIN_LOGIN);
     return;
