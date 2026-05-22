@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="css/theme.css" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/dashboard.css?v=2" />
+  <link rel="stylesheet" href="css/dashboard.css?v=3" />
 </head>
 <body>
   <div class="vegas-bg"></div>
@@ -23,44 +23,44 @@
             <span class="brand-logo-x sm" aria-hidden="true">X</span>
             <div>
               <div class="dash-logo-name">XZENZY</div>
-              <div class="dash-logo-tag">Member portal · Neon Vegas</div>
+              <div class="dash-logo-tag">Member portal</div>
             </div>
           </div>
         </div>
 
-        <div class="dash-ns">Main</div>
-        <a href="dashboard.html" class="dash-ni on" data-nav="dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
-        <button type="button" class="dash-ni disabled" data-soon="network"><i class="ti ti-sitemap"></i> My Network <span class="dash-bx-soon">Soon</span></button>
-        <button type="button" class="dash-ni disabled" data-soon="invite"><i class="ti ti-user-plus"></i> Invite Member <span class="dash-bx-soon">Soon</span></button>
+        <nav class="dash-nav">
+          <div class="dash-ns">Main</div>
+          <button type="button" class="dash-ni on" data-panel="dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
+          <button type="button" class="dash-ni" data-panel="network"><i class="ti ti-sitemap"></i> My Network</button>
+          <button type="button" class="dash-ni" data-panel="invite"><i class="ti ti-user-plus"></i> Invite Member</button>
 
-        <div class="dash-ns">Wallet</div>
-        <button type="button" class="dash-ni disabled" data-soon="deposit"><i class="ti ti-arrow-bar-to-down"></i> Deposit (Crypto) <span class="dash-bx-soon">Soon</span></button>
-        <button type="button" class="dash-ni disabled" data-soon="transfer-bal"><i class="ti ti-arrow-right-circle"></i> Transfer Balance <span class="dash-bx2">P2P</span></button>
-        <button type="button" class="dash-ni disabled" data-soon="transfer-cr"><i class="ti ti-transfer"></i> Transfer Credits <span class="dash-bx2">P2P</span></button>
-        <button type="button" class="dash-ni disabled" data-soon="withdraw"><i class="ti ti-arrow-bar-up"></i> Withdraw <span class="dash-bx-soon">Soon</span></button>
+          <div class="dash-ns">Wallet</div>
+          <button type="button" class="dash-ni" data-panel="deposit"><i class="ti ti-arrow-bar-to-down"></i> Deposit (Crypto)</button>
+          <button type="button" class="dash-ni" data-panel="transfer-bal"><i class="ti ti-arrow-right-circle"></i> Transfer Balance</button>
+          <button type="button" class="dash-ni" data-panel="transfer-cr"><i class="ti ti-transfer"></i> Transfer Credits</button>
+          <button type="button" class="dash-ni" data-panel="withdraw"><i class="ti ti-arrow-bar-up"></i> Withdraw</button>
 
-        <div class="dash-ns">Credits &amp; Game</div>
-        <button type="button" class="dash-ni disabled" data-soon="buy"><i class="ti ti-coins"></i> Buy Credits <span class="dash-bx-soon">Soon</span></button>
-        <a href="game.html" class="dash-ni" data-nav="game"><i class="ti ti-device-gamepad-2"></i> Play Game</a>
-        <button type="button" class="dash-ni disabled" data-soon="leaderboard"><i class="ti ti-trophy"></i> Leaderboard <span class="dash-bx-soon">Soon</span></button>
+          <div class="dash-ns">Credits &amp; Game</div>
+          <button type="button" class="dash-ni" data-panel="buy"><i class="ti ti-coins"></i> Buy Credits</button>
+          <a href="game.html" class="dash-ni dash-ni-link"><i class="ti ti-device-gamepad-2"></i> Play Game</a>
+          <button type="button" class="dash-ni" data-panel="leaderboard"><i class="ti ti-trophy"></i> Leaderboard</button>
 
-        <div class="dash-ns">Commission</div>
-        <button type="button" class="dash-ni disabled" data-soon="direct"><i class="ti ti-cash"></i> Direct Bonus <span class="dash-bx-soon">Soon</span></button>
-        <button type="button" class="dash-ni disabled" data-soon="trinary"><i class="ti ti-chart-dots"></i> Trinary Bonus <span class="dash-bx-soon">Soon</span></button>
-        <button type="button" class="dash-ni disabled" data-soon="comm-hist"><i class="ti ti-report-money"></i> Commission History <span class="dash-bx-soon">Soon</span></button>
+          <div class="dash-ns">Commission</div>
+          <button type="button" class="dash-ni" data-panel="commission"><i class="ti ti-report-money"></i> Commission</button>
 
-        <div class="dash-ns">Account</div>
-        <button type="button" class="dash-ni" id="navProfile"><i class="ti ti-user-circle"></i> Profile</button>
-        <button type="button" class="dash-ni disabled" data-soon="kyc"><i class="ti ti-shield-check"></i> KYC / Security <span class="dash-bx-soon">Soon</span></button>
-        <button type="button" class="dash-ni disabled" data-soon="settings"><i class="ti ti-settings"></i> Settings <span class="dash-bx-soon">Soon</span></button>
-        <button type="button" class="dash-ni" id="btnSignOut"><i class="ti ti-logout"></i> Sign Out</button>
+          <div class="dash-ns">Account</div>
+          <button type="button" class="dash-ni" data-panel="profile"><i class="ti ti-user-circle"></i> Profile</button>
+          <button type="button" class="dash-ni" data-panel="kyc"><i class="ti ti-shield-check"></i> KYC / Security</button>
+          <button type="button" class="dash-ni" data-panel="settings"><i class="ti ti-settings"></i> Settings</button>
+          <button type="button" class="dash-ni" id="btnSignOut"><i class="ti ti-logout"></i> Sign Out</button>
+        </nav>
       </aside>
 
       <div class="dash-main">
         <header class="dash-topbar">
-          <div class="dash-pt">Dashboard</div>
+          <div class="dash-pt" id="panelTitle">Dashboard</div>
           <div class="dash-tr">
-            <span class="dash-meta-id" style="font-size:11px;color:rgba(255,255,255,0.35)">ID <span id="memberId">—</span></span>
+            <span class="dash-meta-id">ID <span id="memberId">—</span></span>
             <span class="dash-badge-rank" id="memberRank">MEMBER</span>
             <span class="dash-meta-ref">Ref: <span id="memberRef">—</span></span>
             <div class="dash-av" id="memberAvatar" title="">—</div>
@@ -68,86 +68,212 @@
         </header>
 
         <div class="dash-content">
-          <div class="dash-notif info" id="welcomeNotif">
-            <i class="ti ti-sparkles" style="font-size:13px"></i>
-            <span>Welcome back, <strong id="welcomeName">Member</strong> — your member area is ready.</span>
-          </div>
+          <!-- Dashboard home -->
+          <section class="dash-panel on" data-panel="dashboard">
+            <div class="dash-notif info" id="welcomeNotif">
+              <i class="ti ti-sparkles"></i>
+              <span>Welcome back, <strong id="welcomeName">Member</strong> — manage wallet, credits &amp; play.</span>
+            </div>
+            <div class="dash-stats-grid">
+              <div class="dash-stat dash-stat-1">
+                <div class="dash-stat-border"></div>
+                <div class="dash-stat-lbl"><i class="ti ti-wallet"></i> Wallet (USDT)</div>
+                <div class="dash-stat-val" id="statWallet">0<span class="dash-stat-unit">USDT</span></div>
+                <div class="dash-stat-sub">Deposit · withdraw · P2P</div>
+              </div>
+              <div class="dash-stat dash-stat-2">
+                <div class="dash-stat-border"></div>
+                <div class="dash-stat-lbl"><i class="ti ti-stars"></i> Game credits</div>
+                <div class="dash-stat-val" id="statCredits">0<span class="dash-stat-unit">Cr</span></div>
+                <div class="dash-stat-sub">Neon Vegas slot balance</div>
+              </div>
+              <div class="dash-stat dash-stat-3">
+                <div class="dash-stat-border"></div>
+                <div class="dash-stat-lbl"><i class="ti ti-users"></i> Network</div>
+                <div class="dash-stat-val" id="statNetwork">0<span class="dash-stat-unit">members</span></div>
+                <div class="dash-stat-sub">Direct referrals</div>
+              </div>
+              <div class="dash-stat dash-stat-4">
+                <div class="dash-stat-border"></div>
+                <div class="dash-stat-lbl"><i class="ti ti-cash"></i> Commission MTD</div>
+                <div class="dash-stat-val" id="statCommission">0<span class="dash-stat-unit">USDT</span></div>
+                <div class="dash-stat-sub">5% direct bonus on buys</div>
+              </div>
+            </div>
+            <div class="dash-card dash-full-card">
+              <div class="dash-ct"><i class="ti ti-history"></i> Recent activity</div>
+              <div id="txListHome"></div>
+            </div>
+            <div class="dash-btns-row">
+              <button type="button" class="dash-btn-a dash-btn-sec" data-goto="deposit"><i class="ti ti-arrow-bar-to-down"></i> Deposit</button>
+              <button type="button" class="dash-btn-a dash-btn-sec" data-goto="buy"><i class="ti ti-coins"></i> Buy credits</button>
+              <a href="game.html" class="dash-btn-a dash-btn-pri"><i class="ti ti-device-gamepad-2"></i> Play game</a>
+            </div>
+          </section>
 
-          <div class="dash-stats-grid">
-            <div class="dash-stat dash-stat-1">
-              <div class="dash-stat-border"></div>
-              <div class="dash-stat-lbl"><i class="ti ti-wallet" style="font-size:11px"></i> Wallet (USDT)</div>
-              <div class="dash-stat-val" id="statWallet">0<span class="dash-stat-unit">USDT</span></div>
-              <div class="dash-stat-sub">Deposit &amp; withdraw — coming soon</div>
-            </div>
-            <div class="dash-stat dash-stat-2">
-              <div class="dash-stat-border"></div>
-              <div class="dash-stat-lbl"><i class="ti ti-stars" style="font-size:11px"></i> Game credits</div>
-              <div class="dash-stat-val" id="statCredits">0<span class="dash-stat-unit">Cr</span></div>
-              <div class="dash-stat-sub">XZENZY · Neon Vegas credits</div>
-            </div>
-            <div class="dash-stat dash-stat-3">
-              <div class="dash-stat-border"></div>
-              <div class="dash-stat-lbl"><i class="ti ti-users" style="font-size:11px"></i> Network</div>
-              <div class="dash-stat-val" id="statNetwork">0<span class="dash-stat-unit">members</span></div>
-              <div class="dash-stat-sub">Trinary tree — coming soon</div>
-            </div>
-            <div class="dash-stat dash-stat-4">
-              <div class="dash-stat-border"></div>
-              <div class="dash-stat-lbl"><i class="ti ti-cash" style="font-size:11px"></i> Commission MTD</div>
-              <div class="dash-stat-val" id="statCommission">0<span class="dash-stat-unit">USDT</span></div>
-              <div class="dash-stat-sub">Direct + Trinary — coming soon</div>
-            </div>
-          </div>
-
-          <div class="dash-row2">
+          <!-- Network -->
+          <section class="dash-panel" data-panel="network" hidden>
             <div class="dash-card">
-              <div class="dash-ct"><i class="ti ti-sitemap"></i> Trinary network</div>
-              <div class="dash-tree-root">
-                <div class="dash-tb dash-tb-me" id="treeMe">You<div class="dash-tb-sub" id="treeMeSub">Member</div></div>
-                <div class="dash-lv"></div>
-                <div style="display:flex;gap:12px;position:relative">
-                  <div style="position:absolute;top:0;left:25px;right:25px" class="dash-lh"></div>
-                  <div style="display:flex;flex-direction:column;align-items:center">
-                    <div class="dash-lv"></div>
-                    <div class="dash-tb dash-tb-c">Leg A<div class="dash-tb-sub">Open</div></div>
-                  </div>
-                  <div style="display:flex;flex-direction:column;align-items:center">
-                    <div class="dash-lv"></div>
-                    <div class="dash-tb dash-tb-c">Leg B<div class="dash-tb-sub">Open</div></div>
-                  </div>
-                  <div style="display:flex;flex-direction:column;align-items:center">
-                    <div class="dash-lv"></div>
-                    <div class="dash-tb dash-tb-c">Leg C<div class="dash-tb-sub">Open</div></div>
-                  </div>
+              <div class="dash-ct"><i class="ti ti-sitemap"></i> My Network</div>
+              <p class="dash-hint">Members who registered with your referral code appear below.</p>
+              <div class="dash-tree-root" id="networkTree"></div>
+              <div id="networkTable" class="dash-table-wrap"></div>
+            </div>
+          </section>
+
+          <!-- Invite -->
+          <section class="dash-panel" data-panel="invite" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-user-plus"></i> Invite Member</div>
+              <p class="dash-hint">Share your code or link. New members can enter your code at signup.</p>
+              <div class="dash-invite-box">
+                <label class="dash-label">Your referral code</label>
+                <div class="dash-copy-row">
+                  <input type="text" class="dash-input" id="inviteCode" readonly />
+                  <button type="button" class="dash-btn-a dash-btn-sec" id="btnCopyCode">Copy</button>
+                </div>
+                <label class="dash-label">Invite link</label>
+                <div class="dash-copy-row">
+                  <input type="text" class="dash-input" id="inviteLink" readonly />
+                  <button type="button" class="dash-btn-a dash-btn-sec" id="btnCopyLink">Copy</button>
                 </div>
               </div>
-              <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.4)">
-                <span>Member → Gold</span><span class="dash-rank-pct" id="rankProgress">0%</span>
-              </div>
-              <div class="dash-prog-bar"><div class="dash-prog-fill" id="rankProgressBar" style="width:0%"></div></div>
-              <p class="dash-empty" style="margin-top:10px">Full network view will appear after referral system is enabled.</p>
             </div>
+          </section>
 
+          <!-- Deposit -->
+          <section class="dash-panel" data-panel="deposit" hidden>
             <div class="dash-card">
-              <div class="dash-ct"><i class="ti ti-cash"></i> Commission — latest</div>
-              <div id="commissionList" class="dash-empty">No commissions yet — invite members to earn (coming soon).</div>
+              <div class="dash-ct"><i class="ti ti-arrow-bar-to-down"></i> Deposit (Crypto)</div>
+              <p class="dash-hint">Submit your USDT deposit. Amounts ≤500 USDT are credited instantly (test tier). Larger amounts stay <strong>pending</strong> until confirmed.</p>
+              <form id="formDeposit" class="dash-form">
+                <label class="dash-label" for="depAmount">Amount (USDT)</label>
+                <input id="depAmount" class="dash-input" type="number" min="1" max="50000" step="0.01" required placeholder="100" />
+                <label class="dash-label" for="depRef">Tx reference / note</label>
+                <input id="depRef" class="dash-input" type="text" maxlength="120" placeholder="Wallet hash or note" />
+                <button type="submit" class="dash-btn-a dash-btn-pri">Submit deposit</button>
+              </form>
             </div>
-          </div>
+          </section>
 
-          <div class="dash-card dash-full-card">
-            <div class="dash-ct"><i class="ti ti-history"></i> Recent activity</div>
-            <div id="txList"></div>
-          </div>
+          <!-- Transfer USDT -->
+          <section class="dash-panel" data-panel="transfer-bal" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-arrow-right-circle"></i> Transfer Balance (USDT)</div>
+              <p class="dash-hint">Send USDT to another member using their <strong>XZ</strong> referral code.</p>
+              <form id="formTransferUsdt" class="dash-form">
+                <label class="dash-label" for="tuCode">Recipient code (XZ…)</label>
+                <input id="tuCode" class="dash-input" type="text" required placeholder="XZ7118067D" />
+                <label class="dash-label" for="tuAmount">Amount (USDT)</label>
+                <input id="tuAmount" class="dash-input" type="number" min="0.01" step="0.01" required />
+                <button type="submit" class="dash-btn-a dash-btn-pri">Send USDT</button>
+              </form>
+            </div>
+          </section>
 
-          <div class="dash-btns-row">
-            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="deposit"><i class="ti ti-arrow-bar-to-down"></i> Deposit</button>
-            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="buy"><i class="ti ti-coins"></i> Buy credits</button>
-            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="transfer-bal"><i class="ti ti-arrow-right-circle"></i> Transfer balance</button>
-            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="transfer-cr"><i class="ti ti-transfer"></i> Transfer credits</button>
-            <button type="button" class="dash-btn-a dash-btn-sec" data-soon="invite"><i class="ti ti-user-plus"></i> Invite</button>
-            <a href="game.html" class="dash-btn-a dash-btn-pri"><i class="ti ti-device-gamepad-2"></i> Play game</a>
-          </div>
+          <!-- Transfer credits -->
+          <section class="dash-panel" data-panel="transfer-cr" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-transfer"></i> Transfer Credits (P2P)</div>
+              <p class="dash-hint">Send game credits to another member. Transfers are instant.</p>
+              <form id="formTransferCr" class="dash-form">
+                <label class="dash-label" for="tcCode">Recipient code (XZ…)</label>
+                <input id="tcCode" class="dash-input" type="text" required placeholder="XZ7118067D" />
+                <label class="dash-label" for="tcAmount">Credits</label>
+                <input id="tcAmount" class="dash-input" type="number" min="1" step="1" required />
+                <button type="submit" class="dash-btn-a dash-btn-pri">Send credits</button>
+              </form>
+            </div>
+          </section>
+
+          <!-- Withdraw -->
+          <section class="dash-panel" data-panel="withdraw" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-arrow-bar-up"></i> Withdraw USDT</div>
+              <p class="dash-hint">Request withdrawal to your crypto wallet. Status will show as <strong>pending</strong> in activity.</p>
+              <form id="formWithdraw" class="dash-form">
+                <label class="dash-label" for="wdAmount">Amount (USDT)</label>
+                <input id="wdAmount" class="dash-input" type="number" min="1" step="0.01" required />
+                <label class="dash-label" for="wdAddress">Wallet address</label>
+                <input id="wdAddress" class="dash-input" type="text" required minlength="8" placeholder="USDT TRC20 / ERC20 address" />
+                <button type="submit" class="dash-btn-a dash-btn-pri">Request withdrawal</button>
+              </form>
+            </div>
+          </section>
+
+          <!-- Buy credits -->
+          <section class="dash-panel" data-panel="buy" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-coins"></i> Buy Credits</div>
+              <p class="dash-hint">Exchange USDT wallet balance for game credits. Rate: <strong id="buyRateLabel">1 USDT = 100 Cr</strong>. Your referrer earns 5% direct bonus.</p>
+              <form id="formBuy" class="dash-form">
+                <label class="dash-label" for="buyUsdt">USDT to spend</label>
+                <input id="buyUsdt" class="dash-input" type="number" min="0.01" step="0.01" required />
+                <p class="dash-preview">You receive: <strong id="buyPreview">0</strong> credits</p>
+                <button type="submit" class="dash-btn-a dash-btn-pri">Buy credits</button>
+              </form>
+            </div>
+          </section>
+
+          <!-- Leaderboard -->
+          <section class="dash-panel" data-panel="leaderboard" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-trophy"></i> Leaderboard</div>
+              <p class="dash-hint">Top players by game credits (Neon Vegas).</p>
+              <div id="leaderboardTable" class="dash-table-wrap"></div>
+            </div>
+          </section>
+
+          <!-- Commission -->
+          <section class="dash-panel" data-panel="commission" hidden>
+            <div class="dash-row2">
+              <div class="dash-card">
+                <div class="dash-ct"><i class="ti ti-cash"></i> Direct Bonus</div>
+                <p class="dash-hint">Earn <strong>5% USDT</strong> when your referrals buy credits.</p>
+                <p class="dash-stat-val" style="font-size:1.4rem;margin-top:8px" id="commMtdPanel">0 <span class="dash-stat-unit">USDT MTD</span></p>
+              </div>
+              <div class="dash-card">
+                <div class="dash-ct"><i class="ti ti-chart-dots"></i> Trinary Bonus</div>
+                <p class="dash-hint">3-leg network bonus — advanced tiers coming in a future update. Build your network via Invite now.</p>
+              </div>
+            </div>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-report-money"></i> Commission history</div>
+              <div id="commissionList"></div>
+            </div>
+          </section>
+
+          <!-- Profile -->
+          <section class="dash-panel" data-panel="profile" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-user-circle"></i> Profile</div>
+              <div id="profileDetail" class="dash-profile-detail"></div>
+            </div>
+          </section>
+
+          <!-- KYC -->
+          <section class="dash-panel" data-panel="kyc" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-shield-check"></i> KYC / Security</div>
+              <div id="kycDetail" class="dash-profile-detail"></div>
+            </div>
+          </section>
+
+          <!-- Settings -->
+          <section class="dash-panel" data-panel="settings" hidden>
+            <div class="dash-card">
+              <div class="dash-ct"><i class="ti ti-settings"></i> Settings</div>
+              <form id="formSettings" class="dash-form">
+                <label class="dash-label" for="setDisplayName">Display name</label>
+                <input id="setDisplayName" class="dash-input" type="text" maxlength="32" />
+                <label class="dash-check">
+                  <input type="checkbox" id="setSound" />
+                  <span>Sound effects in game (saved to your profile)</span>
+                </label>
+                <button type="submit" class="dash-btn-a dash-btn-pri">Save settings</button>
+              </form>
+            </div>
+          </section>
         </div>
       </div>
     </div>
@@ -155,18 +281,8 @@
 
   <div id="dashToast" class="dash-toast" role="status"></div>
 
-  <div id="profileModal" class="modal-overlay">
-    <div class="modal" style="max-width:400px">
-      <header class="modal-head">
-        <h2>Profile</h2>
-        <button type="button" id="profileClose" class="btn chip">×</button>
-      </header>
-      <div class="modal-body" id="profileBody" style="font-size:13px;line-height:1.6"></div>
-    </div>
-  </div>
-
   <script src="js/guard.js"></script>
   <script src="js/auth-callback.js"></script>
-  <script type="module" src="js/dashboard.js"></script>
+  <script type="module" src="js/dashboard.js?v=2"></script>
 </body>
 </html>

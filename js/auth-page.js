@@ -8,6 +8,15 @@ import {
   signUp,
 } from './auth.js';
 import { saveAnonKeyAndConnect } from './supabase-client.js';
+import { setReferrer } from './member-api.js';
+
+const REF_KEY = 'xzenzy_ref';
+
+function captureReferralFromUrl() {
+  const ref = new URLSearchParams(window.location.search).get('ref');
+  if (ref) localStorage.setItem(REF_KEY, ref.trim().toUpperCase());
+}
+captureReferralFromUrl();
 
 const el = {
   tabs: document.querySelectorAll('.auth-tab'),
@@ -139,6 +148,13 @@ function bindAuthUi () {
       return;
     }
     if (data.session) {
+      const ref = localStorage.getItem(REF_KEY);
+      if (ref) {
+        try {
+          await setReferrer(ref);
+          localStorage.removeItem(REF_KEY);
+        } catch (_) {}
+      }
       goDashboard();
       return;
     }
