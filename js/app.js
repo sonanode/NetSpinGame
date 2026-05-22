@@ -226,6 +226,25 @@ function preloadSymbolImages() {
   });
 }
 
+function clearWinDisplay() {
+  if (el.lineCanvas && el.reels) {
+    const canvas = el.lineCanvas;
+    const rect = el.reels.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      canvas.width = rect.width * devicePixelRatio;
+      canvas.height = rect.height * devicePixelRatio;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+      ctx.clearRect(0, 0, rect.width, rect.height);
+    }
+  }
+  el.reels?.querySelectorAll('.cell.win').forEach((cell) => {
+    cell.classList.remove('win');
+  });
+}
+
 function renderGrid(grid, winningCells = new Set()) {
   state.grid = grid;
   for (let c = 0; c < COLS; c++) {
@@ -288,6 +307,8 @@ function drawWinLines() {
 
 function animateReels(finalGrid) {
   return new Promise((resolve) => {
+    clearWinDisplay();
+
     const cols = [...el.reels.children];
     if (!cols.length) {
       resolve();
@@ -385,6 +406,9 @@ async function doSpin() {
   if (state.freeSpinsLeft > 0) audio.startBgm(true);
   else audio.startBgm(false);
 
+  clearWinDisplay();
+  state.lastResult = null;
+
   state.spinning = true;
   el.status.textContent = 'Spinning...';
   el.lastWin.textContent = '0';
@@ -402,9 +426,10 @@ async function doSpin() {
     applyServerState(resp);
     grid = resp.grid;
     result = resp.result;
-    state.lastResult = result;
 
     await animateReels(grid);
+
+    state.lastResult = result;
 
     totalWin = resp.totalWin ?? 0;
     jp = resp.jackpot;
