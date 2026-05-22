@@ -102,7 +102,7 @@ export async function runSpin(state) {
     state.sessionWinMult = 1;
   }
 
-  await playerStore.saveGameState(state);
+  playerStore.saveGameState(state).catch(() => {});
 
   return {
     grid,

@@ -126,12 +126,15 @@ function updateHud() {
       : state.lastResult?.effectiveMult > 1
         ? `×${state.lastResult.effectiveMult}`
         : '×1';
-  el.spinBtn.textContent = state.spinning
-    ? '...'
-    : state.freeSpinsLeft > 0
-      ? 'FREE SPIN'
-      : 'SPIN';
-  el.spinBtn.disabled = state.spinning;
+  if (state.spinning) {
+    el.spinBtn.textContent = state.autoSpin ? 'STOP' : '...';
+  } else if (state.freeSpinsLeft > 0) {
+    el.spinBtn.textContent = 'FREE SPIN';
+  } else {
+    el.spinBtn.textContent = 'SPIN';
+  }
+  el.spinBtn.disabled = false;
+  el.spinBtn.setAttribute('aria-busy', state.spinning ? 'true' : 'false');
   const lock = state.spinning || state.freeSpinsLeft > 0;
   el.betDown.disabled = lock;
   el.betUp.disabled = lock;
@@ -285,8 +288,26 @@ function drawWinLines() {
 function animateReels(finalGrid) {
   return new Promise((resolve) => {
     const cols = [...el.reels.children];
+    if (!cols.length) {
+      resolve();
+      return;
+    }
     const speed = state.autoSpin ? SPIN_TIMING.autoFactor : 1;
-    audio.startSpinLoop();
+    const maxStopMs = Math.round(
+      (SPIN_TIMING.firstReelMs +
+        (cols.length - 1) * SPIN_TIMING.staggerPerReelMs +
+        SPIN_TIMING.postStopPauseMs) *
+        speed
+    );
+    const safety = setTimeout(resolve, maxStopMs + 800);
+    const done = () => {
+      clearTimeout(safety);
+      resolve();
+    };
+
+    try {
+      audio.startSpinLoop();
+    } catch (_) {}
 
     cols.forEach((col, ci) => {
       col.classList.add('spinning');
@@ -313,8 +334,10 @@ function animateReels(finalGrid) {
         }
         audio.playReelStop(ci);
         if (ci === cols.length - 1) {
-          audio.stopSpinLoop();
-          setTimeout(resolve, SPIN_TIMING.postStopPauseMs);
+          try {
+            audio.stopSpinLoop();
+          } catch (_) {}
+          setTimeout(done, SPIN_TIMING.postStopPauseMs);
         }
       }, stopMs);
     });
@@ -338,6 +361,7 @@ function showJackpotOverlay(label, amount) {
 
 async function doSpin() {
   if (state.spinning) return;
+
   const bet = totalBet();
   const isFree = state.freeSpinsLeft > 0;
 
@@ -358,18 +382,23 @@ async function doSpin() {
   audio.playClick();
   updateHud();
 
+  let grid;
+  let result;
+  let totalWin = 0;
+  let jp = null;
+
   try {
     const resp = await runSpin(state);
 
     applyServerState(resp);
-    const grid = resp.grid;
-    const result = resp.result;
+    grid = resp.grid;
+    result = resp.result;
     state.lastResult = result;
 
     await animateReels(grid);
 
-    const totalWin = resp.totalWin ?? 0;
-    const jp = resp.jackpot;
+    totalWin = resp.totalWin ?? 0;
+    jp = resp.jackpot;
 
     if (jp) {
       audio.playBigWin();
@@ -424,15 +453,18 @@ async function doSpin() {
       audio.startBgm(false);
     }
 
-    renderGrid(grid, winningCellKeys(result));
+    if (grid && result) {
+      renderGrid(grid, winningCellKeys(result));
+    }
     renderJackpots();
-    updateHud();
   } catch (err) {
-    el.status.textContent = err.message || 'Spin failed — deploy server?';
+    console.warn(err);
+    el.status.textContent = err.message || 'Spin failed';
     state.autoSpin = false;
+  } finally {
+    state.spinning = false;
+    updateHud();
   }
-
-  state.spinning = false;
 
   if (state.autoSpin && (state.autoRemaining > 0 || state.autoRemaining === -1)) {
     if (state.autoRemaining > 0) state.autoRemaining--;
@@ -462,7 +494,12 @@ function paytableHtml() {
 
 function bindEvents() {
   el.spinBtn.onclick = () => {
-    state.autoSpin = false;
+    if (state.autoSpin) {
+      state.autoSpin = false;
+      updateHud();
+      return;
+    }
+    if (state.spinning) return;
     doSpin();
   };
 
