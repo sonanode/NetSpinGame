@@ -30,15 +30,17 @@ cd "d:\UnityHub\MK Slot Machine Kit • Modern Neon Casino Template\web-mini-slo
 cd "d:\UnityHub\MK Slot Machine Kit • Modern Neon Casino Template\web-mini-slot"
 
 # 1) ล็อกอิน (เปิดเบราว์เซอร์ให้ยืนยัน)
-npx supabase@latest login
+npx --yes supabase login
 
 # 2) ผูกโปรเจกต์
-npx supabase@latest link --project-ref tjaqcnaslxjuklaiivjs
+npx --yes supabase link --project-ref tjaqcnaslxjuklaiivjs
 
 # 3) อัปโหลดฟังก์ชัน
-npx supabase@latest functions deploy spin
-npx supabase@latest functions deploy update-settings
+npx --yes supabase functions deploy spin
+npx --yes supabase functions deploy update-settings
 ```
+
+> ถ้า error `could not determine executable` — ใช้ `npx --yes supabase` แบบด้านบน (มี `--yes`)
 
 รอจนเห็น **Deployed** สำเร็จทั้ง 2 ตัว
 
