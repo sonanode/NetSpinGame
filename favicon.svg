@@ -1,19 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="XZENZY">
   <defs>
-    <linearGradient id="goldPink" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="xzenzyLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#fff8e1"/>
       <stop offset="22%" stop-color="#ffd54f"/>
       <stop offset="45%" stop-color="#ff8f00"/>
       <stop offset="68%" stop-color="#ff3dff"/>
       <stop offset="100%" stop-color="#ff9af0"/>
     </linearGradient>
-    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="0.45" result="b"/>
-      <feMerge>
-        <feMergeNode in="b"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
   </defs>
   <g transform="translate(16 16)">
     <g>
@@ -30,10 +23,9 @@
         text-anchor="middle"
         dominant-baseline="central"
         font-family="Noto Serif Thai, Georgia, Times New Roman, serif"
-        font-size="26"
+        font-size="31"
         font-weight="700"
-        fill="url(#goldPink)"
-        filter="url(#glow)">X</text>
+        fill="url(#xzenzyLogoGrad)">X</text>
     </g>
   </g>
 </svg>
