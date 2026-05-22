@@ -1,0 +1,80 @@
+/**
+ * XZENZY — shared theme (game + dashboard + auth)
+ * Fonts: Rajdhani (UI) · Orbitron (headings, numbers, buttons)
+ */
+:root {
+  --bg: #06040f;
+  --frame: #1e0f3a;
+  --surface: #16102a;
+  --surface-2: #221538;
+  --border: #7b3fb8;
+  --border-dim: rgba(123, 63, 184, 0.45);
+  --pink: #ff3dff;
+  --cyan: #00f0ff;
+  --gold: #ffd54f;
+  --text: #f8f4ff;
+  --muted: #9a8ab8;
+  --success: #6ee7b7;
+  --font-ui: Rajdhani, system-ui, sans-serif;
+  --font-display: Orbitron, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-weight: 500;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+.brand-main,
+.font-display {
+  font-family: var(--font-display);
+}
+
+.brand-logo-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--pink), #9a1578);
+  border: 1px solid rgba(255, 154, 240, 0.6);
+  box-shadow: 0 0 16px rgba(255, 61, 255, 0.45);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.brand-logo-x.sm {
+  width: 28px;
+  height: 28px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
+
+.brand-lockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-lockup .brand-logo-x {
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+  border-radius: 12px;
+}

@@ -50,7 +50,7 @@ function initials(name, email) {
 }
 
 function memberCode(userId) {
-  return `NS${userId.replace(/-/g, '').slice(0, 8).toUpperCase()}`;
+  return `XZ${userId.replace(/-/g, '').slice(0, 8).toUpperCase()}`;
 }
 
 function shortId(userId) {
@@ -106,7 +106,7 @@ function renderActivity() {
       cls: 'dash-tx-in',
     },
     {
-      label: 'Game credits (Neon Vegas)',
+      label: 'Game credits (XZENZY)',
       meta: `Line bet ${profile.line_bet} · ${profile.active_lines} lines · ×${profile.bet_mult}`,
       amt: `${fmt(profile.balance)} Cr`,
       cls: 'dash-tx-cr',

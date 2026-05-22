@@ -1,23 +1,6 @@
-:root {
-  --bg: #06040f;
-  --frame: #1e0f3a;
-  --border: #7b3fb8;
-  --pink: #ff3dff;
-  --cyan: #00f0ff;
-  --gold: #ffd54f;
-  --text: #f8f4ff;
-  --muted: #9a8ab8;
-}
+@import url('theme.css');
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-html, body {
-  min-height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Rajdhani, system-ui, sans-serif;
-  overflow-x: hidden;
-}
+* { margin: 0; padding: 0; }
 
 .vegas-bg {
   position: fixed;
@@ -50,7 +33,7 @@ html, body {
 }
 
 .brand-main {
-  font-family: Orbitron, sans-serif;
+  font-family: var(--font-display);
   font-weight: 900;
   font-size: 1.15rem;
   color: var(--pink);
@@ -62,6 +45,17 @@ html, body {
   font-size: 0.72rem;
   color: var(--cyan);
   letter-spacing: 0.2em;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-row > div {
+  display: flex;
+  flex-direction: column;
 }
 
 .sound-toggle {
