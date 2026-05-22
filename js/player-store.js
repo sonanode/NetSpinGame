@@ -59,3 +59,25 @@ export async function flushSaveNow (state) {
     sound: state.sound,
   });
 }
+
+/** Save balance / jackpots after each spin (local game mode) */
+export async function saveGameState (state) {
+  const sb = getSupabase();
+  if (!sb || !userId) return;
+
+  const { error } = await sb
+    .from('profiles')
+    .update({
+      balance: Math.floor(state.balance),
+      line_bet: state.lineBet,
+      active_lines: state.activeLines,
+      bet_mult: state.betMult,
+      jackpots: state.jackpots,
+      free_spins_left: state.freeSpinsLeft,
+      session_win_mult: state.sessionWinMult,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId);
+
+  if (error) console.warn('Save game state:', error.message);
+}

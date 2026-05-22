@@ -12,7 +12,7 @@ import {
   SYMBOLS,
 } from './config.js';
 import * as playerStore from './player-store.js';
-import { fetchPreviewGrid, requestSpin } from './spin-api.js';
+import { previewGrid, runSpin } from './local-spin.js';
 
 const STORAGE_KEY = 'mk_neon_4x5_prefs';
 
@@ -359,11 +359,7 @@ async function doSpin() {
   updateHud();
 
   try {
-    const resp = await requestSpin({
-      lineBet: state.lineBet,
-      activeLines: state.activeLines,
-      betMult: state.betMult,
-    });
+    const resp = await runSpin(state);
 
     applyServerState(resp);
     const grid = resp.grid;
@@ -559,17 +555,10 @@ async function initGame() {
   el.soundToggle.checked = state.sound;
   document.body.addEventListener('click', () => audio.unlock(), { once: true });
 
-  try {
-    const preview = await fetchPreviewGrid();
-    applyServerState(preview);
-    if (preview?.grid) renderGrid(preview.grid);
-    renderJackpots();
-    el.status.textContent = '4×5 Neon Vegas — Spin to win!';
-  } catch (err) {
-    console.warn('Preview grid failed:', err);
-    el.status.textContent =
-      err.message || 'Server not ready — deploy Edge Functions (see SETUP-SECURE.md)';
-  }
+  const preview = previewGrid();
+  renderGrid(preview.grid);
+  renderJackpots();
+  el.status.textContent = '4×5 Neon Vegas — Spin to win!';
 
   updateHud();
 }

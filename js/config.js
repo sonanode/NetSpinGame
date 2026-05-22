@@ -3,18 +3,18 @@
 export const ASSET_BASE = 'assets/symbols';
 
 export const SYMBOLS = [
-  { id: 0, name: 'A', file: 'A.png' },
-  { id: 1, name: '10', file: '10.png' },
-  { id: 2, name: '9', file: '9.png' },
-  { id: 3, name: 'Diamond', file: 'Diamond.png' },
-  { id: 4, name: 'J', file: 'J.png' },
-  { id: 5, name: 'K', file: 'K.png' },
-  { id: 6, name: 'Wild', file: 'Wild.png' },
-  { id: 7, name: 'FreeSpin', file: 'FreeSpin.png' },
-  { id: 8, name: 'Heart', file: 'Heart.png' },
-  { id: 9, name: 'Q', file: 'Q.png' },
-  { id: 10, name: 'Scatter', file: 'Scatter.png' },
-  { id: 11, name: 'Bonus', file: 'Bonus.png' },
+  { id: 0, name: 'A', file: 'A.png', wildSub: true },
+  { id: 1, name: '10', file: '10.png', wildSub: true },
+  { id: 2, name: '9', file: '9.png', wildSub: true },
+  { id: 3, name: 'Diamond', file: 'Diamond.png', wildSub: true },
+  { id: 4, name: 'J', file: 'J.png', wildSub: true },
+  { id: 5, name: 'K', file: 'K.png', wildSub: true },
+  { id: 6, name: 'Wild', file: 'Wild.png', wildSub: false },
+  { id: 7, name: 'FreeSpin', file: 'FreeSpin.png', wildSub: true },
+  { id: 8, name: 'Heart', file: 'Heart.png', wildSub: true },
+  { id: 9, name: 'Q', file: 'Q.png', wildSub: true },
+  { id: 10, name: 'Scatter', file: 'Scatter.png', wildSub: false },
+  { id: 11, name: 'Bonus', file: 'Bonus.png', wildSub: false },
 ];
 
 export const COLS = 5;
